@@ -12,10 +12,3 @@ def get_blog_posts(request):
     posts = BlogPost.objects.all().order_by("-id")
     serializer = BlogPostSerializer(posts, many=True)
     return Response(serializer.data)
-
-
-@api_view(["GET"])
-def get_blog_post_views(request):
-    views = BlogPostViews.objects.all().order_by("-views")
-    serializer = BlogPostViewsSerializer(views, many=True)
-    return Response(serializer.data)

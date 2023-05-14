@@ -1,5 +1,12 @@
+from django.contrib.auth.models import User
 from rest_framework import serializers
 from .models import *
+
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ("username",)
 
 
 class BlogImageLinkSerializer(serializers.ModelSerializer):
@@ -16,7 +23,8 @@ class BlogPostViewsSerializer(serializers.ModelSerializer):
 
 class BlogPostSerializer(serializers.ModelSerializer):
     images = serializers.SerializerMethodField(read_only=True)
-    view_count = BlogPostViewsSerializer(source="views", read_only=True)
+    view_count = serializers.SerializerMethodField(read_only=True)
+    user = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = BlogPost
@@ -29,3 +37,19 @@ class BlogPostSerializer(serializers.ModelSerializer):
             return image_urls
         except Exception as e:
             return e
+
+    def get_view_count(self, obj):
+        try:
+            post_views = obj.views.first()
+            if post_views:
+                count = post_views.views
+            else:
+                count = 0
+            return count
+        except Exception as e:
+            return e
+
+    def get_user(self, obj):
+        user = obj.user
+        serializer = UserSerializer(user, many=False)
+        return serializer.data["username"]
