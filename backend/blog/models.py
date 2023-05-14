@@ -35,8 +35,8 @@ class BlogPost(models.Model):
     cover_image = WEBPField(
         verbose_name=("cover_image"),
         upload_to=image_folder,
-        null=True,
-        blank=True,
+        null=False,
+        blank=False,
     )
     content = models.TextField(blank=False, null=False)
 
@@ -51,8 +51,8 @@ class BlogImageLink(models.Model):
     image = WEBPField(
         verbose_name=("image"),
         upload_to=image_folder,
-        null=True,
-        blank=True,
+        null=False,
+        blank=False,
     )
 
     def __str__(self):
@@ -68,6 +68,9 @@ class BlogPostViews(models.Model):
     def __str__(self):
         return f"@{self.post.user} - {self.post.title} - {self.views} views"
 
+    class Meta:
+        verbose_name_plural = "Blog post views"
+
 
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -77,6 +80,3 @@ from django.dispatch import receiver
 def create_blogpost_views(sender, instance, created, **kwargs):
     if created:
         BlogPostViews.objects.create(post=instance)
-        print("hi")
-
-    print("no hi")
