@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Sun, MoonStar } from "lucide-react";
 
-import { Fade } from "react-awesome-reveal";
+import { Fade } from "react-reveal";
 
 interface Link {
     label: string;
@@ -31,15 +31,14 @@ export const Hamburger = ({
                     <Menu />
                 </Button>
             </SheetTrigger>
-            <Fade bottom cascade>
-                <SheetContent
-                    position="bottom"
-                    size="lg"
-                    className="flex flex-col justify-center items-center gap-4 pb-[5rem]"
-                >
-                    {links.map((link) => (
+            <SheetContent
+                position="bottom"
+                size="lg"
+                className="flex flex-col justify-center items-center gap-4 pb-[5rem]"
+            >
+                {links.map((link, i) => (
+                    <Fade key={link.href} bottom delay={100 * i}>
                         <Link
-                            key={link.href}
                             href={link.href}
                             className={`hover:text-slate-600 dark:hover:text-slate-400 transition-all duration-300 ${
                                 router.pathname === link.href
@@ -49,7 +48,9 @@ export const Hamburger = ({
                         >
                             {link.label}
                         </Link>
-                    ))}
+                    </Fade>
+                ))}
+                <Fade bottom delay={400}>
                     <Button
                         variant="ghost"
                         onClick={() =>
@@ -58,8 +59,8 @@ export const Hamburger = ({
                     >
                         {theme === "light" ? <Sun /> : <MoonStar />}
                     </Button>
-                </SheetContent>
-            </Fade>
+                </Fade>
+            </SheetContent>
         </Sheet>
     );
 };
