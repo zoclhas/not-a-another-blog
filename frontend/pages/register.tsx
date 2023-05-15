@@ -17,33 +17,50 @@ import { useToast } from "@/components/ui/use-toast";
 import { AtSign, Eye, EyeOff, Loader2 } from "lucide-react";
 import { Fade } from "react-reveal";
 
-import { login } from "@/redux/actions/userActions";
+import { register, login } from "@/redux/actions/userActions";
 
-export default function Login() {
+export default function Register() {
     const dispatch = useDispatch();
     const router = useRouter();
     const { toast } = useToast();
 
     const [username, setUsername] = useState<string>("");
+    const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
+    const [confirmPassword, setConfirmPassword] = useState<string>("");
     const [viewPassword, setViewPassword] = useState<Boolean>(false);
 
-    // Checking whether user is logged in
+    const userRegister = useSelector((state: any) => state.userRegister);
+    const { loading, userInfo, success, error } = userRegister;
     const userLogin = useSelector((state: any) => state.userLogin);
-    const { loading, userInfo, success, error } = userLogin;
+    const {
+        loading: loginLoading,
+        userInfo: userLoginInfo,
+        success: loginSuccess,
+        error: loginError,
+    } = userLogin;
+
     useEffect(() => {
-        if (userInfo || success) {
+        if (userLoginInfo) {
             router.push("/profile");
         }
 
         if (success) {
-            toast({
-                title: `Logged in as @${userInfo.user.username}!`,
-            });
+            dispatch(login(username, password) as any);
+            if (loginSuccess) {
+                toast({
+                    title: `Logged in as @${userLoginInfo.user.username}!`,
+                });
+            } else if (loginError) {
+                toast({
+                    variant: "destructive",
+                    title: "Uh oh! Something went wrong.",
+                    description: String(loginError),
+                });
+            }
         }
-    }, [router, userInfo, success]);
+    }, [router, userInfo, success, loginSuccess, loginError]);
 
-    // Error handling
     useEffect(() => {
         if (error) {
             toast({
@@ -54,13 +71,27 @@ export default function Login() {
         }
     }, [error]);
 
-    const loginHandler = () => dispatch(login(username, password) as any);
+    const isDisabled =
+        username.length >= 3 &&
+        email.length > 0 &&
+        email
+            .toLowerCase()
+            .match(
+                /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+            ) &&
+        password.length >= 8 &&
+        confirmPassword.length >= 8 &&
+        password === confirmPassword;
+
+    const registerHandler = () => {
+        dispatch(register(username, email, password, confirmPassword) as any);
+    };
     return (
-        <div className="h-[calc(100vh-76px)] grid place-items-center">
+        <div className="h-[calc(100vh-76px)] grid place-items-center max-md:my-4 max-md:pb-10 max-md:h-full">
             <div>
                 <Card className="mx-4">
                     <CardHeader>
-                        <CardTitle>Login</CardTitle>
+                        <CardTitle>Register</CardTitle>
                         <CardDescription>
                             Your session key will be stored for 30 days unless
                             signed out.
@@ -71,7 +102,7 @@ export default function Login() {
                         <form
                             onSubmit={(e) => {
                                 e.preventDefault();
-                                loginHandler();
+                                if (isDisabled) registerHandler();
                             }}
                         >
                             <div className="grid w-full max-w-sm items-center gap-1.5 mb-4">
@@ -90,10 +121,28 @@ export default function Login() {
                                         }
                                     />
                                 </div>
+                                <p className="text-sm text-muted-foreground">
+                                    Atleast 3 characters long.
+                                </p>
+                            </div>
+
+                            <div className="grid w-full max-w-sm items-center gap-1.5 mb-4">
+                                <Label htmlFor="email">Email</Label>
+                                <Input
+                                    type="email"
+                                    id="email"
+                                    placeholder="john@example.com"
+                                    required
+                                    onChange={(e) => setEmail(e.target.value)}
+                                />
+                                <p className="text-sm text-muted-foreground">
+                                    You can't change your email address ever
+                                    after this.
+                                </p>
                             </div>
 
                             <div className="grid w-full max-w-sm items-center gap-1.5 my-4">
-                                <Label htmlFor="password">Password</Label>
+                                <Label htmlFor="username">Password</Label>
                                 <div className="flex gap-1.5">
                                     <Input
                                         type={
@@ -122,31 +171,63 @@ export default function Login() {
                                     </Button>
                                 </div>
                             </div>
+                            <div className="grid w-full max-w-sm items-center gap-1.5 my-4">
+                                <Label htmlFor="confirm-password">
+                                    Confirm Password
+                                </Label>
+                                <div className="flex gap-1.5">
+                                    <Input
+                                        type={
+                                            !viewPassword ? "password" : "text"
+                                        }
+                                        id="confirm-password"
+                                        placeholder="Confirm Password"
+                                        required
+                                        onChange={(e) =>
+                                            setConfirmPassword(e.target.value)
+                                        }
+                                    />
+                                    <Button
+                                        className="aspect-square"
+                                        type="button"
+                                        variant="outline"
+                                        onClick={() =>
+                                            setViewPassword(!viewPassword)
+                                        }
+                                    >
+                                        {viewPassword ? (
+                                            <Eye className="scale-[3]" />
+                                        ) : (
+                                            <EyeOff className="scale-[3]" />
+                                        )}
+                                    </Button>
+                                </div>
+                            </div>
 
                             <Button
                                 className="w-full"
                                 variant="secondary"
                                 type="submit"
-                                disabled={loading}
+                                disabled={
+                                    loading || !isDisabled || loginLoading
+                                }
                             >
                                 {loading && (
                                     <Fade bottom duration={100}>
                                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                                     </Fade>
                                 )}
-                                Login
+                                Register
                             </Button>
                         </form>
                     </CardContent>
                 </Card>
 
-                <div className="grid gap-1.5 grid-cols-2 mt-1.5 mx-4">
+                <div className="grid gap-1.5 mt-1.5 mx-4">
                     <Button variant="outline" className="w-full" asChild>
-                        <Link href="/register">Register</Link>
-                    </Button>
-
-                    <Button variant="outline" className="w-full" asChild>
-                        <Link href="/forgot-password">Forgot Password?</Link>
+                        <Link href="/login">
+                            Already have an account? Login
+                        </Link>
                     </Button>
                 </div>
             </div>

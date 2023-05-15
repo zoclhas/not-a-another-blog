@@ -35,8 +35,8 @@ export const login =
                 type: USER_LOGIN_FAIL,
                 payload:
                     error.response.data.detail ||
-                    error.response.data.non_field_errors[0] ||
-                    error,
+                    error ||
+                    error.response.data.non_field_errors[0],
             });
         }
     };
@@ -47,7 +47,7 @@ export const logout = () => (dispatch: any) => {
 };
 
 export const register =
-    (name: string, email: string, password: string) =>
+    (username: string, email: string, password: string, password2: string) =>
     async (dispatch: any) => {
         try {
             dispatch({ type: USER_REGISTER_REQUEST });
@@ -60,23 +60,31 @@ export const register =
 
             const { data } = await axios.post(
                 `${url}/dj-rest-auth/register/`,
-                { name: name, email: email, password: password },
+                {
+                    username: username,
+                    email: email,
+                    password1: password,
+                    password2: password2,
+                },
                 config
             );
 
             dispatch({
                 type: USER_REGISTER_SUCCESS,
-                paylod: data,
+                payload: data,
             });
 
             localStorage.setItem("userInfo", JSON.stringify(data));
         } catch (error: any) {
+            console.log(error);
             dispatch({
                 type: USER_REGISTER_FAIL,
                 payload:
-                    error.response.data && error.response.data.detail
-                        ? error.response.data.detail
-                        : error.message,
+                    error.response.data.detail ||
+                    error.response.data.username ||
+                    error.response.data.email ||
+                    error.response.data.password ||
+                    error.response.data.non_field_errors[0],
             });
         }
     };
