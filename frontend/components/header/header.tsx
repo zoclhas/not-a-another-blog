@@ -2,12 +2,16 @@ import { useState, useEffect } from "react";
 import { useTheme } from "next-themes";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import dynamic from "next/dynamic";
 import { cn } from "@/lib/utils";
 
 import { Button } from "@/components/ui/button";
 import { Sun, MoonStar } from "lucide-react";
-import { Profile } from "./profile";
 import { Hamburger } from "./hamburger";
+
+const Profile = dynamic(() => import("./profile"), {
+    ssr: false,
+});
 
 export const Header = ({
     className,
