@@ -7,6 +7,7 @@ import { Provider } from "react-redux";
 import { wrapper } from "@/redux/store";
 
 import { Header } from "@/components/header/header";
+import { Toaster } from "@/components/ui/toaster";
 
 export default function App({ Component, pageProps, ...rest }: AppProps) {
     const { store, props } = wrapper.useWrappedStore(rest);
@@ -15,8 +16,9 @@ export default function App({ Component, pageProps, ...rest }: AppProps) {
         <Provider store={store}>
             <ThemeProvider defaultTheme="system" attribute="class">
                 <Header />
-                <main className="h-[200vh]">
+                <main>
                     <Component {...pageProps} />
+                    <Toaster />
                 </main>
             </ThemeProvider>
         </Provider>
