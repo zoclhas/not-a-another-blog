@@ -136,8 +136,8 @@ export default function Register() {
                                     onChange={(e) => setEmail(e.target.value)}
                                 />
                                 <p className="text-sm text-muted-foreground">
-                                    You can't change your email address ever
-                                    after this.
+                                    You can&apos;t change your email address
+                                    ever after this.
                                 </p>
                             </div>
 
