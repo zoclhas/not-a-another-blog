@@ -59,7 +59,7 @@ export const Header = ({
                 window.removeEventListener("scroll", controlNavbar);
             };
         }
-    }, [lastScrollY]);
+    }, [lastScrollY, controlNavbar]);
 
     return (
         <nav

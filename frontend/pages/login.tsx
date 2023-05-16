@@ -41,7 +41,7 @@ export default function Login() {
                 title: `Logged in as @${userInfo.user.username}!`,
             });
         }
-    }, [router, userInfo, success]);
+    }, [router, userInfo, success, toast, userInfo]);
 
     // Error handling
     useEffect(() => {
@@ -52,11 +52,11 @@ export default function Login() {
                 description: String(error),
             });
         }
-    }, [error]);
+    }, [error, toast]);
 
     const loginHandler = () => dispatch(login(username, password) as any);
     return (
-        <div className="h-[calc(100vh-76px)] grid place-items-center">
+        <div className="grid h-[calc(100vh-76px)] place-items-center">
             <div>
                 <Card className="mx-4">
                     <CardHeader>
@@ -74,10 +74,10 @@ export default function Login() {
                                 loginHandler();
                             }}
                         >
-                            <div className="grid w-full max-w-sm items-center gap-1.5 mb-4">
+                            <div className="mb-4 grid w-full max-w-sm items-center gap-1.5">
                                 <Label htmlFor="username">Username</Label>
                                 <div className="flex gap-1.5">
-                                    <div className="inline-flex items-center justify-center rounded-md border border-input h-10 py-2 px-4 aspect-square w-[40px]">
+                                    <div className="inline-flex aspect-square h-10 w-[40px] items-center justify-center rounded-md border border-input px-4 py-2">
                                         <AtSign className="scale-[3]" />
                                     </div>
                                     <Input
@@ -92,7 +92,7 @@ export default function Login() {
                                 </div>
                             </div>
 
-                            <div className="grid w-full max-w-sm items-center gap-1.5 my-4">
+                            <div className="my-4 grid w-full max-w-sm items-center gap-1.5">
                                 <Label htmlFor="password">Password</Label>
                                 <div className="flex gap-1.5">
                                     <Input
@@ -140,7 +140,7 @@ export default function Login() {
                     </CardContent>
                 </Card>
 
-                <div className="grid gap-1.5 grid-cols-2 mt-1.5 mx-4">
+                <div className="mx-4 mt-1.5 grid grid-cols-2 gap-1.5">
                     <Button variant="outline" className="w-full" asChild>
                         <Link href="/register">Register</Link>
                     </Button>

@@ -24,7 +24,7 @@ class BlogPostViewsSerializer(serializers.ModelSerializer):
 class BlogPostSerializer(serializers.ModelSerializer):
     images = serializers.SerializerMethodField(read_only=True)
     view_count = serializers.SerializerMethodField(read_only=True)
-    user = serializers.SerializerMethodField(read_only=True)
+    username = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = BlogPost
@@ -49,7 +49,7 @@ class BlogPostSerializer(serializers.ModelSerializer):
         except Exception as e:
             return e
 
-    def get_user(self, obj):
+    def get_username(self, obj):
         user = obj.user
         serializer = UserSerializer(user, many=False)
         return serializer.data["username"]

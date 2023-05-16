@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
+    "start": "next start -p 5000",
     "lint": "next lint"
   },
   "dependencies": {
@@ -33,6 +33,8 @@
     "next-redux-wrapper": "^8.1.0",
     "next-themes": "^0.2.1",
     "postcss": "8.4.23",
+    "prettier": "^2.8.8",
+    "prettier-plugin-tailwindcss": "^0.3.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-redux": "^8.0.5",

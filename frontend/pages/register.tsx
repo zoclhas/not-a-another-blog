@@ -59,7 +59,15 @@ export default function Register() {
                 });
             }
         }
-    }, [router, userInfo, success, loginSuccess, loginError]);
+    }, [
+        router,
+        userInfo,
+        success,
+        loginSuccess,
+        loginError,
+        userLoginInfo,
+        toast,
+    ]);
 
     useEffect(() => {
         if (error) {
@@ -69,7 +77,7 @@ export default function Register() {
                 description: String(error),
             });
         }
-    }, [error]);
+    }, [error, toast]);
 
     const isDisabled =
         username.length >= 3 &&
@@ -87,7 +95,7 @@ export default function Register() {
         dispatch(register(username, email, password, confirmPassword) as any);
     };
     return (
-        <div className="h-[calc(100vh-76px)] grid place-items-center max-md:my-4 max-md:pb-10 max-md:h-full">
+        <div className="grid h-[calc(100vh-76px)] place-items-center max-md:my-4 max-md:h-full max-md:pb-10">
             <div>
                 <Card className="mx-4">
                     <CardHeader>
@@ -105,10 +113,10 @@ export default function Register() {
                                 if (isDisabled) registerHandler();
                             }}
                         >
-                            <div className="grid w-full max-w-sm items-center gap-1.5 mb-4">
+                            <div className="mb-4 grid w-full max-w-sm items-center gap-1.5">
                                 <Label htmlFor="username">Username</Label>
                                 <div className="flex gap-1.5">
-                                    <div className="inline-flex items-center justify-center rounded-md border border-input h-10 py-2 px-4 aspect-square w-[40px]">
+                                    <div className="inline-flex aspect-square h-10 w-[40px] items-center justify-center rounded-md border border-input px-4 py-2">
                                         <AtSign className="scale-[3]" />
                                     </div>
                                     <Input
@@ -126,7 +134,7 @@ export default function Register() {
                                 </p>
                             </div>
 
-                            <div className="grid w-full max-w-sm items-center gap-1.5 mb-4">
+                            <div className="mb-4 grid w-full max-w-sm items-center gap-1.5">
                                 <Label htmlFor="email">Email</Label>
                                 <Input
                                     type="email"
@@ -141,7 +149,7 @@ export default function Register() {
                                 </p>
                             </div>
 
-                            <div className="grid w-full max-w-sm items-center gap-1.5 my-4">
+                            <div className="my-4 grid w-full max-w-sm items-center gap-1.5">
                                 <Label htmlFor="username">Password</Label>
                                 <div className="flex gap-1.5">
                                     <Input
@@ -171,7 +179,7 @@ export default function Register() {
                                     </Button>
                                 </div>
                             </div>
-                            <div className="grid w-full max-w-sm items-center gap-1.5 my-4">
+                            <div className="my-4 grid w-full max-w-sm items-center gap-1.5">
                                 <Label htmlFor="confirm-password">
                                     Confirm Password
                                 </Label>
@@ -223,7 +231,7 @@ export default function Register() {
                     </CardContent>
                 </Card>
 
-                <div className="grid gap-1.5 mt-1.5 mx-4">
+                <div className="mx-4 mt-1.5 grid gap-1.5">
                     <Button variant="outline" className="w-full" asChild>
                         <Link href="/login">
                             Already have an account? Login

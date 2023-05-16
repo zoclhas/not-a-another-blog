@@ -12,3 +12,24 @@ def get_blog_posts(request):
     posts = BlogPost.objects.all().order_by("-id")
     serializer = BlogPostSerializer(posts, many=True)
     return Response(serializer.data)
+
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def get_my_posts(request):
+    posts = (
+        BlogPost.objects.filter(user=request.user).filter(draft=False).order_by("-id")
+    )
+    drafts = (
+        BlogPost.objects.filter(user=request.user).filter(draft=True).order_by("-id")
+    )
+    serializer = BlogPostSerializer(posts, many=True)
+    draft_serializer = BlogPostSerializer(drafts, many=True)
+    return Response(
+        {
+            "blogs": serializer.data,
+            "drafts": draft_serializer.data,
+            "total_blogs": len(posts),
+            "total_drafts": len(drafts),
+        }
+    )
