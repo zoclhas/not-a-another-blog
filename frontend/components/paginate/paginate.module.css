@@ -1,0 +1,30 @@
+/* .item must be first */
+.item {
+    @apply aspect-square w-8 bg-white;
+}
+
+.default {
+    width: 32px !important;
+    @apply grid aspect-square w-8 place-items-center rounded-md transition-all duration-150 ease-in;
+}
+
+.break-me {
+}
+
+.pagination {
+    @apply flex items-center justify-center gap-1.5 p-8;
+}
+
+.pagination :global(.next),
+.pagination :global(.previous) {
+    @apply transition-opacity duration-150;
+}
+
+.pagination :global(.next.disabled),
+.pagination :global(.previous.disabled) {
+    @apply opacity-25;
+}
+
+.pagination-page {
+    font-weight: 700;
+}

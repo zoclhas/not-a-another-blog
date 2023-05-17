@@ -6,7 +6,6 @@ import { useDispatch, useSelector } from "react-redux";
 import {
     Card,
     CardContent,
-    CardDescription,
     CardFooter,
     CardHeader,
     CardTitle,
@@ -14,6 +13,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { Skeleton } from "@/components/ui/skeleton";
+import { PaginatedItems } from "@/components/paginate/paginate";
 
 import { getMyBlogs } from "@/redux/actions/blogActions";
 
@@ -25,25 +25,35 @@ export default function Profile() {
     const userLogin = useSelector((state: any) => state.userLogin);
     const { loading: userLoading, userInfo, error: userError } = userLogin;
     const myBlogs = useSelector((state: any) => state.myBlogs);
-    const { loading, error, blogs, total_blogs, drafts, total_drafts } =
-        myBlogs;
+    const {
+        loading,
+        error,
+        blogs,
+        total_blogs,
+        drafts,
+        total_drafts,
+        page,
+        pages,
+    } = myBlogs;
 
     useEffect(() => {
         if (!userInfo || !userInfo.user.username) router.push("/login");
-    }, [userInfo, router]);
+    }, [userInfo]);
 
     useEffect(() => {
-        if (userError) {
+        if (userError || error) {
             toast({
                 variant: "destructive",
                 title: "Uh oh! Something went wrong.",
-                description: String(userError),
+                description: String(userError || error),
             });
         }
-    }, [userError, toast]);
+    }, [userError, toast, error]);
+
+    let currentPage = Number(router.query["page"]);
 
     useEffect(() => {
-        dispatch(getMyBlogs() as any);
+        dispatch(getMyBlogs(currentPage ? currentPage : 1) as any);
     }, [dispatch, getMyBlogs]);
 
     if (userInfo) {
@@ -51,6 +61,11 @@ export default function Profile() {
             <div className="m-auto my-4 grid max-w-6xl grid-cols-[1.5fr,0.5fr] px-4">
                 <div>
                     <b>hi</b>
+                    <PaginatedItems
+                        itemsPerPage={6}
+                        totalCount={pages}
+                        page={page}
+                    />
                 </div>
 
                 {!userLoading && !userError ? (

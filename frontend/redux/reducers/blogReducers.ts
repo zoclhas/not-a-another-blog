@@ -18,6 +18,8 @@ export const myBlogsReducer = (state = {}, action: any) => {
                 total_blogs: action.payload.total_blogs,
                 drafts: action.payload.drafts,
                 total_drafts: action.payload.total_drafts,
+                page: action.payload.page,
+                pages: action.payload.pages,
             };
 
         case MY_BLOGS_FAIL:
