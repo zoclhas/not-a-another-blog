@@ -14,33 +14,30 @@ interface Link {
     href: string;
 }
 
-export const Hamburger = ({
-    links,
-    className,
-}: {
-    links: Link[];
-    className?: string;
-}) => {
+export const Hamburger = ({ links }: { links: Link[] }) => {
     const { theme, setTheme } = useTheme();
     const router = useRouter();
 
     return (
         <Sheet>
             <SheetTrigger asChild>
-                <Button variant="ghost" className={className}>
-                    <Menu />
+                <Button
+                    variant="ghost"
+                    className="hidden aspect-square w-[40] max-md:flex"
+                >
+                    <Menu className="scale-[3]" />
                 </Button>
             </SheetTrigger>
             <SheetContent
                 position="bottom"
                 size="lg"
-                className="flex flex-col justify-center items-center gap-4 pb-[5rem]"
+                className="flex flex-col items-center justify-center gap-4 pb-[5rem]"
             >
                 {links.map((link, i) => (
                     <Fade key={link.href} bottom delay={100 * i}>
                         <Link
                             href={link.href}
-                            className={`hover:text-slate-600 dark:hover:text-slate-400 transition-all duration-300 ${
+                            className={`transition-all duration-300 hover:text-slate-600 dark:hover:text-slate-400 ${
                                 router.pathname === link.href
                                     ? "font-bold"
                                     : null
@@ -53,11 +50,16 @@ export const Hamburger = ({
                 <Fade bottom delay={400}>
                     <Button
                         variant="ghost"
+                        className="aspect-square w-[40px]"
                         onClick={() =>
                             setTheme(theme === "light" ? "dark" : "light")
                         }
                     >
-                        {theme === "light" ? <Sun /> : <MoonStar />}
+                        {theme === "light" ? (
+                            <Sun className="scale-[3]" />
+                        ) : (
+                            <MoonStar className="scale-[3]" />
+                        )}
                     </Button>
                 </Fade>
             </SheetContent>

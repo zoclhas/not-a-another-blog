@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import Image from "next/image";
 import { useDispatch, useSelector } from "react-redux";
 
 import {
@@ -14,8 +15,21 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { Skeleton } from "@/components/ui/skeleton";
 import { PaginatedItems } from "@/components/paginate/paginate";
+import { Eye, Edit } from "lucide-react";
 
 import { getMyBlogs } from "@/redux/actions/blogActions";
+
+interface BlogInterface {
+    id: number;
+    images: string[];
+    view_count: number;
+    username: string;
+    title: string;
+    draft: boolean;
+    published: string;
+    cover_image: string;
+    content: string;
+}
 
 export default function Profile() {
     const router = useRouter();
@@ -58,18 +72,215 @@ export default function Profile() {
 
     if (userInfo) {
         return (
-            <div className="m-auto my-4 grid max-w-6xl grid-cols-[1.5fr,0.5fr] px-4">
+            <div className="m-auto my-4 grid max-w-6xl grid-cols-[1.5fr,0.5fr] gap-4 px-4 max-md:flex max-md:flex-col-reverse">
                 <div>
-                    <b>hi</b>
-                    <PaginatedItems
-                        itemsPerPage={6}
-                        totalCount={pages}
-                        page={page}
-                    />
+                    {loading ? (
+                        <>
+                            <div id="posts">
+                                <h1 className="mb-2 text-4xl font-bold">
+                                    <Skeleton className="h-11 max-w-[8rem]" />
+                                </h1>
+                                <div className="grid grid-cols-3 gap-1.5 max-md:grid-cols-2 max-sm:grid-cols-1">
+                                    {[0, 1, 2].map((index) => (
+                                        <Card key={index}>
+                                            <CardHeader>
+                                                <Skeleton className="h-5" />
+                                            </CardHeader>
+
+                                            <CardContent>
+                                                <Skeleton className="h-[100px]" />
+                                            </CardContent>
+
+                                            <CardFooter className="flex gap-1.5">
+                                                <Skeleton className="h-9 w-full" />
+                                                <Skeleton className="h-9 w-full" />
+                                            </CardFooter>
+                                        </Card>
+                                    ))}
+                                </div>
+                            </div>
+                            <div id="drafts" className="mt-8">
+                                <h1 className="mb-2 text-4xl font-bold">
+                                    <Skeleton className="h-11 max-w-[8rem]" />
+                                </h1>
+                                <div className="grid grid-cols-3 gap-1.5 max-md:grid-cols-2 max-sm:grid-cols-1">
+                                    {[0, 1, 2].map((index) => (
+                                        <Card key={index}>
+                                            <CardHeader>
+                                                <Skeleton className="h-5" />
+                                            </CardHeader>
+
+                                            <CardContent>
+                                                <Skeleton className="h-[100px]" />
+                                            </CardContent>
+
+                                            <CardFooter className="flex gap-1.5">
+                                                <Skeleton className="h-9 w-full" />
+                                                <Skeleton className="h-9 w-full" />
+                                            </CardFooter>
+                                        </Card>
+                                    ))}
+                                </div>
+                            </div>
+                        </>
+                    ) : (
+                        <>
+                            {blogs && (
+                                <div id="posts">
+                                    <h1 className="mb-2 text-4xl font-bold">
+                                        Posts
+                                    </h1>
+                                    <div className="grid grid-cols-3 gap-1.5 max-md:grid-cols-2 max-sm:grid-cols-1">
+                                        {blogs.map((blog: BlogInterface) => (
+                                            <Card
+                                                key={String(blog.id)}
+                                                className="flex flex-col justify-between"
+                                            >
+                                                <CardHeader>
+                                                    <CardTitle>
+                                                        {blog.title}
+                                                    </CardTitle>
+                                                </CardHeader>
+
+                                                <CardContent>
+                                                    <Image
+                                                        src={`${process.env.NEXT_PUBLIC_API_URL}${blog.cover_image}`}
+                                                        alt={blog.title}
+                                                        width={260}
+                                                        height={140}
+                                                        className="h-full w-full rounded-md object-fill"
+                                                    />
+                                                </CardContent>
+
+                                                <CardFooter className="flex gap-1.5">
+                                                    <Button
+                                                        className="w-full"
+                                                        variant="default"
+                                                        asChild
+                                                    >
+                                                        <Link
+                                                            href={`/post/${blog.id}`}
+                                                        >
+                                                            <Eye />
+                                                            &nbsp;View
+                                                        </Link>
+                                                    </Button>
+
+                                                    <Button
+                                                        className="w-full"
+                                                        variant="secondary"
+                                                        asChild
+                                                    >
+                                                        <Link
+                                                            href={`/post/${blog.id}/edit`}
+                                                        >
+                                                            <Edit />
+                                                            &nbsp;Edit
+                                                        </Link>
+                                                    </Button>
+                                                </CardFooter>
+                                            </Card>
+                                        ))}
+                                    </div>
+                                    {blogs.length <= 0 && (
+                                        <Card>
+                                            <CardHeader>
+                                                <CardTitle>
+                                                    You have no Blogs.
+                                                </CardTitle>
+                                            </CardHeader>
+                                        </Card>
+                                    )}
+
+                                    <PaginatedItems
+                                        itemsPerPage={6}
+                                        totalCount={pages}
+                                        page={page}
+                                    />
+                                </div>
+                            )}
+
+                            {drafts && (
+                                <div id="drafts" className="mt-8">
+                                    <Link
+                                        href="/profile/drafts"
+                                        className="!underline"
+                                    >
+                                        <h1 className="mb-2 text-4xl font-bold">
+                                            Drafts ({total_drafts})
+                                        </h1>
+                                    </Link>
+                                    <div className="grid grid-cols-3 gap-1.5 max-md:grid-cols-2 max-sm:grid-cols-1">
+                                        {drafts
+                                            .slice(0, 3)
+                                            .map((draft: BlogInterface) => (
+                                                <Card
+                                                    key={String(draft.id)}
+                                                    className="flex flex-col justify-between"
+                                                >
+                                                    <CardHeader>
+                                                        <CardTitle>
+                                                            {draft.title}
+                                                        </CardTitle>
+                                                    </CardHeader>
+
+                                                    <CardContent>
+                                                        <Image
+                                                            src={`${process.env.NEXT_PUBLIC_API_URL}${draft.cover_image}`}
+                                                            alt={draft.title}
+                                                            width={260}
+                                                            height={140}
+                                                            className="h-full w-full rounded-md object-fill"
+                                                        />
+                                                    </CardContent>
+
+                                                    <CardFooter className="flex gap-1.5">
+                                                        <Button
+                                                            className="w-full"
+                                                            variant="default"
+                                                            asChild
+                                                        >
+                                                            <Link
+                                                                href={`/post/${draft.id}`}
+                                                            >
+                                                                <Eye />
+                                                                &nbsp;View
+                                                            </Link>
+                                                        </Button>
+
+                                                        <Button
+                                                            className="w-full"
+                                                            variant="secondary"
+                                                            asChild
+                                                        >
+                                                            <Link
+                                                                href={`/post/${draft.id}/edit`}
+                                                            >
+                                                                <Edit />
+                                                                &nbsp;Edit
+                                                            </Link>
+                                                        </Button>
+                                                    </CardFooter>
+                                                </Card>
+                                            ))}
+                                    </div>
+                                    {drafts.length <= 0 && (
+                                        <Card>
+                                            <CardHeader>
+                                                <CardTitle>
+                                                    You have no drafts.
+                                                </CardTitle>
+                                            </CardHeader>
+                                        </Card>
+                                    )}
+                                </div>
+                            )}
+                        </>
+                    )}
                 </div>
 
                 {!userLoading && !userError ? (
-                    <Card className="w-full">
+                    <Card className="h-max w-full">
                         <CardHeader>
                             <CardTitle>
                                 <Link href={`/@${userInfo.user.username}`}>
@@ -127,7 +338,7 @@ export default function Profile() {
                         )}
                     </Card>
                 ) : (
-                    <Card className="w-full">
+                    <Card className="h-max w-full">
                         <CardHeader>
                             <CardTitle>
                                 <Button

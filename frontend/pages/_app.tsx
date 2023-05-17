@@ -16,7 +16,7 @@ export default function App({ Component, pageProps, ...rest }: AppProps) {
         <Provider store={store}>
             <ThemeProvider defaultTheme="system" attribute="class">
                 <Header />
-                <main>
+                <main className="max-md:pb-[76px]">
                     <Component {...pageProps} />
                     <Toaster />
                 </main>

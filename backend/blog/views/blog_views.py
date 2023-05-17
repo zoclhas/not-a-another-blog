@@ -23,6 +23,22 @@ def get_my_posts(request):
     drafts = (
         BlogPost.objects.filter(user=request.user).filter(draft=True).order_by("-id")
     )
+
+    page = request.query_params.get("page")
+    paginator = Paginator(posts, 6)
+
+    try:
+        posts = paginator.page(page)
+    except PageNotAnInteger:
+        posts = paginator.page(1)
+    except EmptyPage:
+        posts = paginator.page(paginator.num_pages)
+
+    if page == None:
+        page = 1
+
+    page = int(page)
+
     serializer = BlogPostSerializer(posts, many=True)
     draft_serializer = BlogPostSerializer(drafts, many=True)
     return Response(
@@ -31,5 +47,7 @@ def get_my_posts(request):
             "drafts": draft_serializer.data,
             "total_blogs": len(posts),
             "total_drafts": len(drafts),
+            "page": page,
+            "pages": paginator.num_pages,
         }
     )

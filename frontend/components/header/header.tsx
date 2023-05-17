@@ -64,13 +64,13 @@ export const Header = ({
     return (
         <nav
             className={`${cn(
-                "z-[1000] sticky md:top-0  px-4 flex justify-between items-center gap-4 h-[76px] bg-inherit bg-opacity-80 backdrop-blur-[10px] border-b max-md:fixed max-md:bottom-0 max-md:border-b-0 max-md:border-t max-md:w-full transition-all duration-300 ease",
+                "ease sticky z-[1000]  flex h-[76px] items-center justify-between gap-4 border-b bg-inherit bg-opacity-80 px-4 backdrop-blur-[10px] transition-all duration-300 max-md:fixed max-md:bottom-0 max-md:w-full max-md:border-b-0 max-md:border-t md:top-0",
                 className
             )} ${!isNavbarVisible ? "md:top-0" : "md:top-[-76px]"}`}
             {...props}
         >
             <Link href="/">
-                <strong className="text-xl dark:text-white hover:text-slate-400 transition-all duration-300">
+                <strong className="text-xl transition-all duration-300 hover:text-slate-400 dark:text-white">
                     NAAB
                 </strong>
             </Link>
@@ -80,7 +80,7 @@ export const Header = ({
                     <Link
                         key={link.href}
                         href={link.href}
-                        className={`hover:text-slate-600 dark:hover:text-slate-400 transition-all duration-300 ${
+                        className={`transition-all duration-300 hover:text-slate-600 dark:hover:text-slate-400 ${
                             router.pathname === link.href ? "font-bold" : null
                         }`}
                     >
@@ -92,15 +92,19 @@ export const Header = ({
             <div className="flex gap-2">
                 <Button
                     variant="ghost"
-                    className="max-md:hidden"
+                    className="aspect-square w-[40px] max-md:hidden"
                     onClick={() =>
                         setTheme(theme === "light" ? "dark" : "light")
                     }
                 >
-                    {theme === "light" ? <Sun /> : <MoonStar />}
+                    {theme === "light" ? (
+                        <Sun className="scale-[3]" />
+                    ) : (
+                        <MoonStar className="scale-[3]" />
+                    )}
                 </Button>
                 <Profile />
-                <Hamburger links={links} className="hidden max-md:block" />
+                <Hamburger links={links} />
             </div>
         </nav>
     );
