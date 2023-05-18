@@ -11,10 +11,7 @@ const nextConfig = {
                 hostname:
                     "zoclhas-verbose-chainsaw-wxj5v74xp4jcg446-8000.preview.app.github.dev",
             },
-            {
-        hostname: "api.naab.zocs.space"
-      }    
-    ],  
+        ],
     },
 };
 
