@@ -57,13 +57,17 @@ def get_my_posts(request):
 
 @api_view(["GET"])
 def get_post(request, pk):
-    if request.user is not None and not request.user.is_anonymous:
-        post = BlogPost.objects.get(id=pk)
+    if (
+        request.user is not None
+        and not request.user.is_anonymous
+        # and BlogPost.objects.filter(user=request.user)
+    ):
+        post = BlogPost.objects.filter(id=pk)
         serializer = BlogPostSerializer(post, many=False)
         return Response(serializer.data)
 
     try:
-        post = BlogPost.objects.filter(draft=False).get(id=pk)
+        post = BlogPost.objects.get(id=pk).filter(draft=False)
         serializer = BlogPostSerializer(post, many=False)
         return Response(serializer.data)
     except:
