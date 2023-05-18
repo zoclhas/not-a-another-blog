@@ -6,6 +6,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from blog.models import *
 from blog.serializers import *
 
+from rest_framework import status
 
 @api_view(["GET"])
 def get_blog_posts(request):
@@ -51,3 +52,15 @@ def get_my_posts(request):
             "pages": paginator.num_pages,
         }
     )
+
+@api_view(["GET"])
+def get_post(request, pk):
+    post = BlogPost.objects.filter(draft=False).get(id=pk)
+
+    if post.DoesNotExist:
+        print(post)
+        content = {'detail': "Blog doesn't exist or is draft."}
+        return Response(content, status=status.HTTP_404_NOT_FOUND)
+
+    serializer = BlogPostSerializer(post, many=False)
+    return Response(serializer.data)
