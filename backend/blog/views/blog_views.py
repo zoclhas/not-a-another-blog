@@ -8,6 +8,7 @@ from blog.serializers import *
 
 from rest_framework import status
 
+
 @api_view(["GET"])
 def get_blog_posts(request):
     posts = BlogPost.objects.all().order_by("-id")
@@ -53,14 +54,18 @@ def get_my_posts(request):
         }
     )
 
+
 @api_view(["GET"])
 def get_post(request, pk):
-    post = BlogPost.objects.filter(draft=False).get(id=pk)
+    if request.user is not None and not request.user.is_anonymous:
+        post = BlogPost.objects.get(id=pk)
+        serializer = BlogPostSerializer(post, many=False)
+        return Response(serializer.data)
 
-    if post.DoesNotExist:
-        print(post)
-        content = {'detail': "Blog doesn't exist or is draft."}
+    try:
+        post = BlogPost.objects.filter(draft=False).get(id=pk)
+        serializer = BlogPostSerializer(post, many=False)
+        return Response(serializer.data)
+    except:
+        content = {"detail": "Blog doesn't exist or is draft."}
         return Response(content, status=status.HTTP_404_NOT_FOUND)
-
-    serializer = BlogPostSerializer(post, many=False)
-    return Response(serializer.data)
