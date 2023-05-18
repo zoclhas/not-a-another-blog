@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import Head from "next/head";
 
 import {
     Card,
@@ -56,100 +57,109 @@ export default function Login() {
 
     const loginHandler = () => dispatch(login(username, password) as any);
     return (
-        <div className="grid h-[calc(100vh-76px)] place-items-center">
-            <div>
-                <Card className="mx-4">
-                    <CardHeader>
-                        <CardTitle>Login</CardTitle>
-                        <CardDescription>
-                            Your session key will be stored for 30 days unless
-                            signed out.
-                        </CardDescription>
-                    </CardHeader>
+        <>
+            <Head>
+                <title>NAAB | Login</title>
+            </Head>
+            <div className="grid h-[calc(100vh-76px)] place-items-center">
+                <div>
+                    <Card className="mx-4">
+                        <CardHeader>
+                            <CardTitle>Login</CardTitle>
+                            <CardDescription>
+                                Your session key will be stored for 30 days
+                                unless signed out.
+                            </CardDescription>
+                        </CardHeader>
 
-                    <CardContent>
-                        <form
-                            onSubmit={(e) => {
-                                e.preventDefault();
-                                loginHandler();
-                            }}
-                        >
-                            <div className="mb-4 grid w-full max-w-sm items-center gap-1.5">
-                                <Label htmlFor="username">Username</Label>
-                                <div className="flex gap-1.5">
-                                    <div className="inline-flex aspect-square h-10 w-[40px] items-center justify-center rounded-md border border-input px-4 py-2">
-                                        <AtSign className="scale-[3]" />
-                                    </div>
-                                    <Input
-                                        type="text"
-                                        id="username"
-                                        placeholder="Username"
-                                        required
-                                        onChange={(e) =>
-                                            setUsername(e.target.value)
-                                        }
-                                    />
-                                </div>
-                            </div>
-
-                            <div className="my-4 grid w-full max-w-sm items-center gap-1.5">
-                                <Label htmlFor="password">Password</Label>
-                                <div className="flex gap-1.5">
-                                    <Input
-                                        type={
-                                            !viewPassword ? "password" : "text"
-                                        }
-                                        id="password"
-                                        placeholder="Password"
-                                        required
-                                        onChange={(e) =>
-                                            setPassword(e.target.value)
-                                        }
-                                    />
-                                    <Button
-                                        className="aspect-square"
-                                        type="button"
-                                        variant="outline"
-                                        onClick={() =>
-                                            setViewPassword(!viewPassword)
-                                        }
-                                    >
-                                        {viewPassword ? (
-                                            <Eye className="scale-[3]" />
-                                        ) : (
-                                            <EyeOff className="scale-[3]" />
-                                        )}
-                                    </Button>
-                                </div>
-                            </div>
-
-                            <Button
-                                className="w-full"
-                                variant="secondary"
-                                type="submit"
-                                disabled={loading}
+                        <CardContent>
+                            <form
+                                onSubmit={(e) => {
+                                    e.preventDefault();
+                                    loginHandler();
+                                }}
                             >
-                                {loading && (
-                                    <Fade bottom duration={100}>
-                                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                    </Fade>
-                                )}
-                                Login
-                            </Button>
-                        </form>
-                    </CardContent>
-                </Card>
+                                <div className="mb-4 grid w-full max-w-sm items-center gap-1.5">
+                                    <Label htmlFor="username">Username</Label>
+                                    <div className="flex gap-1.5">
+                                        <div className="inline-flex aspect-square h-10 w-[40px] items-center justify-center rounded-md border border-input px-4 py-2">
+                                            <AtSign className="scale-[3]" />
+                                        </div>
+                                        <Input
+                                            type="text"
+                                            id="username"
+                                            placeholder="Username"
+                                            required
+                                            onChange={(e) =>
+                                                setUsername(e.target.value)
+                                            }
+                                        />
+                                    </div>
+                                </div>
 
-                <div className="mx-4 mt-1.5 grid grid-cols-2 gap-1.5">
-                    <Button variant="outline" className="w-full" asChild>
-                        <Link href="/register">Register</Link>
-                    </Button>
+                                <div className="my-4 grid w-full max-w-sm items-center gap-1.5">
+                                    <Label htmlFor="password">Password</Label>
+                                    <div className="flex gap-1.5">
+                                        <Input
+                                            type={
+                                                !viewPassword
+                                                    ? "password"
+                                                    : "text"
+                                            }
+                                            id="password"
+                                            placeholder="Password"
+                                            required
+                                            onChange={(e) =>
+                                                setPassword(e.target.value)
+                                            }
+                                        />
+                                        <Button
+                                            className="aspect-square"
+                                            type="button"
+                                            variant="outline"
+                                            onClick={() =>
+                                                setViewPassword(!viewPassword)
+                                            }
+                                        >
+                                            {viewPassword ? (
+                                                <Eye className="scale-[3]" />
+                                            ) : (
+                                                <EyeOff className="scale-[3]" />
+                                            )}
+                                        </Button>
+                                    </div>
+                                </div>
 
-                    <Button variant="outline" className="w-full" asChild>
-                        <Link href="/forgot-password">Forgot Password?</Link>
-                    </Button>
+                                <Button
+                                    className="w-full"
+                                    variant="secondary"
+                                    type="submit"
+                                    disabled={loading}
+                                >
+                                    {loading && (
+                                        <Fade bottom duration={100}>
+                                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                        </Fade>
+                                    )}
+                                    Login
+                                </Button>
+                            </form>
+                        </CardContent>
+                    </Card>
+
+                    <div className="mx-4 mt-1.5 grid grid-cols-2 gap-1.5">
+                        <Button variant="outline" className="w-full" asChild>
+                            <Link href="/register">Register</Link>
+                        </Button>
+
+                        <Button variant="outline" className="w-full" asChild>
+                            <Link href="/forgot-password">
+                                Forgot Password?
+                            </Link>
+                        </Button>
+                    </div>
                 </div>
             </div>
-        </div>
+        </>
     );
 }

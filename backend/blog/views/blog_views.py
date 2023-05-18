@@ -11,7 +11,7 @@ from rest_framework import status
 
 @api_view(["GET"])
 def get_blog_posts(request):
-    posts = BlogPost.objects.all().order_by("-id")
+    posts = BlogPost.objects.fitler(draft=False).order_by("-id")
     serializer = BlogPostSerializer(posts, many=True)
     return Response(serializer.data)
 
@@ -60,9 +60,9 @@ def get_post(request, pk):
     if (
         request.user is not None
         and not request.user.is_anonymous
-        # and BlogPost.objects.filter(user=request.user)
+        and BlogPost.objects.filter(user=request.user)
     ):
-        post = BlogPost.objects.filter(id=pk)
+        post = BlogPost.objects.get(id=pk)
         serializer = BlogPostSerializer(post, many=False)
         return Response(serializer.data)
 

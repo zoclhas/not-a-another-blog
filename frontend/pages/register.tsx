@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import Head from "next/head";
 
 import {
     Card,
@@ -95,150 +96,163 @@ export default function Register() {
         dispatch(register(username, email, password, confirmPassword) as any);
     };
     return (
-        <div className="grid h-[calc(100vh-76px)] place-items-center max-md:my-4 max-md:h-full max-md:pb-10">
-            <div>
-                <Card className="mx-4">
-                    <CardHeader>
-                        <CardTitle>Register</CardTitle>
-                        <CardDescription>
-                            Your session key will be stored for 30 days unless
-                            signed out.
-                        </CardDescription>
-                    </CardHeader>
+        <>
+            <Head>
+                <title>NAAB | Register</title>
+            </Head>
+            <div className="grid h-[calc(100vh-76px)] place-items-center max-md:my-4 max-md:h-full">
+                <div>
+                    <Card className="mx-4">
+                        <CardHeader>
+                            <CardTitle>Register</CardTitle>
+                            <CardDescription>
+                                Your session key will be stored for 30 days
+                                unless signed out.
+                            </CardDescription>
+                        </CardHeader>
 
-                    <CardContent>
-                        <form
-                            onSubmit={(e) => {
-                                e.preventDefault();
-                                if (isDisabled) registerHandler();
-                            }}
-                        >
-                            <div className="mb-4 grid w-full max-w-sm items-center gap-1.5">
-                                <Label htmlFor="username">Username</Label>
-                                <div className="flex gap-1.5">
-                                    <div className="inline-flex aspect-square h-10 w-[40px] items-center justify-center rounded-md border border-input px-4 py-2">
-                                        <AtSign className="scale-[3]" />
-                                    </div>
-                                    <Input
-                                        type="text"
-                                        id="username"
-                                        placeholder="Username"
-                                        required
-                                        onChange={(e) =>
-                                            setUsername(e.target.value)
-                                        }
-                                    />
-                                </div>
-                                <p className="text-sm text-muted-foreground">
-                                    Atleast 3 characters long.
-                                </p>
-                            </div>
-
-                            <div className="mb-4 grid w-full max-w-sm items-center gap-1.5">
-                                <Label htmlFor="email">Email</Label>
-                                <Input
-                                    type="email"
-                                    id="email"
-                                    placeholder="john@example.com"
-                                    required
-                                    onChange={(e) => setEmail(e.target.value)}
-                                />
-                                <p className="text-sm text-muted-foreground">
-                                    You can&apos;t change your email address
-                                    ever after this.
-                                </p>
-                            </div>
-
-                            <div className="my-4 grid w-full max-w-sm items-center gap-1.5">
-                                <Label htmlFor="username">Password</Label>
-                                <div className="flex gap-1.5">
-                                    <Input
-                                        type={
-                                            !viewPassword ? "password" : "text"
-                                        }
-                                        id="password"
-                                        placeholder="Password"
-                                        required
-                                        onChange={(e) =>
-                                            setPassword(e.target.value)
-                                        }
-                                    />
-                                    <Button
-                                        className="aspect-square"
-                                        type="button"
-                                        variant="outline"
-                                        onClick={() =>
-                                            setViewPassword(!viewPassword)
-                                        }
-                                    >
-                                        {viewPassword ? (
-                                            <Eye className="scale-[3]" />
-                                        ) : (
-                                            <EyeOff className="scale-[3]" />
-                                        )}
-                                    </Button>
-                                </div>
-                            </div>
-                            <div className="my-4 grid w-full max-w-sm items-center gap-1.5">
-                                <Label htmlFor="confirm-password">
-                                    Confirm Password
-                                </Label>
-                                <div className="flex gap-1.5">
-                                    <Input
-                                        type={
-                                            !viewPassword ? "password" : "text"
-                                        }
-                                        id="confirm-password"
-                                        placeholder="Confirm Password"
-                                        required
-                                        onChange={(e) =>
-                                            setConfirmPassword(e.target.value)
-                                        }
-                                    />
-                                    <Button
-                                        className="aspect-square"
-                                        type="button"
-                                        variant="outline"
-                                        onClick={() =>
-                                            setViewPassword(!viewPassword)
-                                        }
-                                    >
-                                        {viewPassword ? (
-                                            <Eye className="scale-[3]" />
-                                        ) : (
-                                            <EyeOff className="scale-[3]" />
-                                        )}
-                                    </Button>
-                                </div>
-                            </div>
-
-                            <Button
-                                className="w-full"
-                                variant="secondary"
-                                type="submit"
-                                disabled={
-                                    loading || !isDisabled || loginLoading
-                                }
+                        <CardContent>
+                            <form
+                                onSubmit={(e) => {
+                                    e.preventDefault();
+                                    if (isDisabled) registerHandler();
+                                }}
                             >
-                                {loading && (
-                                    <Fade bottom duration={100}>
-                                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                    </Fade>
-                                )}
-                                Register
-                            </Button>
-                        </form>
-                    </CardContent>
-                </Card>
+                                <div className="mb-4 grid w-full max-w-sm items-center gap-1.5">
+                                    <Label htmlFor="username">Username</Label>
+                                    <div className="flex gap-1.5">
+                                        <div className="inline-flex aspect-square h-10 w-[40px] items-center justify-center rounded-md border border-input px-4 py-2">
+                                            <AtSign className="scale-[3]" />
+                                        </div>
+                                        <Input
+                                            type="text"
+                                            id="username"
+                                            placeholder="Username"
+                                            required
+                                            onChange={(e) =>
+                                                setUsername(e.target.value)
+                                            }
+                                        />
+                                    </div>
+                                    <p className="text-sm text-muted-foreground">
+                                        Atleast 3 characters long.
+                                    </p>
+                                </div>
 
-                <div className="mx-4 mt-1.5 grid gap-1.5">
-                    <Button variant="outline" className="w-full" asChild>
-                        <Link href="/login">
-                            Already have an account? Login
-                        </Link>
-                    </Button>
+                                <div className="mb-4 grid w-full max-w-sm items-center gap-1.5">
+                                    <Label htmlFor="email">Email</Label>
+                                    <Input
+                                        type="email"
+                                        id="email"
+                                        placeholder="john@example.com"
+                                        required
+                                        onChange={(e) =>
+                                            setEmail(e.target.value)
+                                        }
+                                    />
+                                    <p className="text-sm text-muted-foreground">
+                                        You can&apos;t change your email address
+                                        ever after this.
+                                    </p>
+                                </div>
+
+                                <div className="my-4 grid w-full max-w-sm items-center gap-1.5">
+                                    <Label htmlFor="username">Password</Label>
+                                    <div className="flex gap-1.5">
+                                        <Input
+                                            type={
+                                                !viewPassword
+                                                    ? "password"
+                                                    : "text"
+                                            }
+                                            id="password"
+                                            placeholder="Password"
+                                            required
+                                            onChange={(e) =>
+                                                setPassword(e.target.value)
+                                            }
+                                        />
+                                        <Button
+                                            className="aspect-square"
+                                            type="button"
+                                            variant="outline"
+                                            onClick={() =>
+                                                setViewPassword(!viewPassword)
+                                            }
+                                        >
+                                            {viewPassword ? (
+                                                <Eye className="scale-[3]" />
+                                            ) : (
+                                                <EyeOff className="scale-[3]" />
+                                            )}
+                                        </Button>
+                                    </div>
+                                </div>
+                                <div className="my-4 grid w-full max-w-sm items-center gap-1.5">
+                                    <Label htmlFor="confirm-password">
+                                        Confirm Password
+                                    </Label>
+                                    <div className="flex gap-1.5">
+                                        <Input
+                                            type={
+                                                !viewPassword
+                                                    ? "password"
+                                                    : "text"
+                                            }
+                                            id="confirm-password"
+                                            placeholder="Confirm Password"
+                                            required
+                                            onChange={(e) =>
+                                                setConfirmPassword(
+                                                    e.target.value
+                                                )
+                                            }
+                                        />
+                                        <Button
+                                            className="aspect-square"
+                                            type="button"
+                                            variant="outline"
+                                            onClick={() =>
+                                                setViewPassword(!viewPassword)
+                                            }
+                                        >
+                                            {viewPassword ? (
+                                                <Eye className="scale-[3]" />
+                                            ) : (
+                                                <EyeOff className="scale-[3]" />
+                                            )}
+                                        </Button>
+                                    </div>
+                                </div>
+
+                                <Button
+                                    className="w-full"
+                                    variant="secondary"
+                                    type="submit"
+                                    disabled={
+                                        loading || !isDisabled || loginLoading
+                                    }
+                                >
+                                    {loading && (
+                                        <Fade bottom duration={100}>
+                                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                        </Fade>
+                                    )}
+                                    Register
+                                </Button>
+                            </form>
+                        </CardContent>
+                    </Card>
+
+                    <div className="mx-4 mt-1.5 grid gap-1.5">
+                        <Button variant="outline" className="w-full" asChild>
+                            <Link href="/login">
+                                Already have an account? Login
+                            </Link>
+                        </Button>
+                    </div>
                 </div>
             </div>
-        </div>
+        </>
     );
 }

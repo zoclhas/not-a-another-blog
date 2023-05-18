@@ -72,7 +72,8 @@
 
 @layer base {
     * {
-        @apply border-border;
+        @apply border-border md:scroll-p-[76px];
+        scroll-behavior: smooth;
     }
     body {
         @apply bg-background text-foreground;

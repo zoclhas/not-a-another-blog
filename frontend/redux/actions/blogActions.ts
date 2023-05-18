@@ -71,7 +71,9 @@ export const getBlogDetails =
         } catch (error: any) {
             dispatch({
                 type: BLOG_DETAIL_FAIL,
-                payload: error.detail ? error.detail : error,
+                payload: error.response.data.detail
+                    ? error.response.data.detail
+                    : error,
             });
         }
     };

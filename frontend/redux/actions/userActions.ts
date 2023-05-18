@@ -33,10 +33,11 @@ export const login =
         } catch (error: any) {
             dispatch({
                 type: USER_LOGIN_FAIL,
-                payload:
-                    error.response.data.detail ||
-                    error ||
-                    error.response.data.non_field_errors[0],
+                payload: error.response.data.non_field_errors[0]
+                    ? error.response.data.non_field_errors[0]
+                    : error.response.data.detail
+                    ? error.response.data.detail
+                    : error,
             });
         }
     };
@@ -79,12 +80,17 @@ export const register =
             console.log(error);
             dispatch({
                 type: USER_REGISTER_FAIL,
-                payload:
-                    error.response.data.detail ||
-                    error.response.data.username ||
-                    error.response.data.email ||
-                    error.response.data.password ||
-                    error.response.data.non_field_errors[0],
+                payload: error.response.data.detail
+                    ? error.response.data.detail
+                    : error.response.data.username
+                    ? error.response.data.username
+                    : error.response.data.email
+                    ? error.response.data.email
+                    : error.response.data.password
+                    ? error.response.data.password
+                    : error.response.data.non_field_errors[0]
+                    ? error.response.data.non_field_errors[0]
+                    : error,
             });
         }
     };
