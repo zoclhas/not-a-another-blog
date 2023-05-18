@@ -169,6 +169,6 @@ ACCOUNT_AUTHENTICATION_METHOD = "username"
 ACCOUNT_EMAIL_VERIFICATION = "none"
 # ACCOUNT_EMAIL_REQUIRED = False
 CSRF_TRUSTED_ORIGINS = [
-    "https://api.zocs.space",
+    "https://api.naab.zocs.space",
     "https://zoclhas-verbose-chainsaw-wxj5v74xp4jcg446-8000.preview.app.github.dev",
 ]
