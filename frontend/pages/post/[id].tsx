@@ -8,17 +8,16 @@ import { Markdown } from "@/components/markdown/markdown";
 
 import {
     Card,
-    CardContent,
     CardDescription,
     CardHeader,
     CardTitle,
     CardFooter,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
 import { Eye, ChevronLeft } from "lucide-react";
 
 import { getBlogDetails } from "@/redux/actions/blogActions";
@@ -148,6 +147,15 @@ export default function PostPage() {
                     <h1 className="text-6xl max-sm:text-4xl font-bold">
                         {title}
                     </h1>
+                    <h3 className="mt-4 opacity-40 flex gap-4 items-center">
+                        {published} <span>|</span>
+                        <span className="flex items-center font-bold tabular-nums">
+                            <Eye />
+                            <span className="relative bottom-[1px]">
+                                &nbsp;{view_count}
+                            </span>
+                        </span>
+                    </h3>
 
                     <div>
                         <Image
@@ -159,21 +167,32 @@ export default function PostPage() {
                             alt={`${title}s cover image`}
                             className="w-full aspect-video object-cover rounded-lg mt-4"
                         />
-                        <Button variant="secondary" asChild className="px-1.5">
-                            <Link
-                                href={`@${username}`}
-                                className="mt-2 flex items-center gap-1.5"
+                        <div className="mt-2 flex items-center gap-4">
+                            <Button
+                                variant="secondary"
+                                asChild
+                                className="px-1.5"
                             >
-                                <div className="flex aspect-square w-[30px] items-center justify-center rounded-md bg-slate-400 dark:bg-slate-700">
-                                    <span className="text-sm">
-                                        {username
-                                            ? username.slice(0, 1).toUpperCase()
-                                            : ""}
+                                <Link
+                                    href={`@${username}`}
+                                    className="flex items-center gap-1.5"
+                                >
+                                    <div className="flex aspect-square w-[30px] items-center justify-center rounded-md bg-slate-400 dark:bg-slate-700">
+                                        <span className="text-sm">
+                                            {username
+                                                ? username
+                                                      .slice(0, 1)
+                                                      .toUpperCase()
+                                                : ""}
+                                        </span>
+                                    </div>
+                                    <span className="opacity-50">
+                                        @{username}
                                     </span>
-                                </div>
-                                <span className="opacity-50">@{username}</span>
-                            </Link>
-                        </Button>
+                                </Link>
+                            </Button>
+                            {draft && <Badge>Draft</Badge>}
+                        </div>
                     </div>
 
                     <div className="prose mt-8 dark:prose-invert">
