@@ -32,43 +32,18 @@ export default function Register() {
     const [viewPassword, setViewPassword] = useState<Boolean>(false);
 
     const userRegister = useSelector((state: any) => state.userRegister);
-    const { loading, userInfo, success, error } = userRegister;
+    const { loading, userInfo, error } = userRegister;
     const userLogin = useSelector((state: any) => state.userLogin);
-    const {
-        loading: loginLoading,
-        userInfo: userLoginInfo,
-        success: loginSuccess,
-        error: loginError,
-    } = userLogin;
+    const { loading: loginLoading, userInfo: userLoginInfo } = userLogin;
 
     useEffect(() => {
         if (userLoginInfo) {
             router.push("/profile");
+            toast({
+                title: `Logged in as @${userLoginInfo.user.username}`,
+            });
         }
-
-        if (success) {
-            dispatch(login(username, password) as any);
-            if (loginSuccess) {
-                toast({
-                    title: `Logged in as @${userLoginInfo.user.username}!`,
-                });
-            } else if (loginError) {
-                toast({
-                    variant: "destructive",
-                    title: "Uh oh! Something went wrong.",
-                    description: String(loginError),
-                });
-            }
-        }
-    }, [
-        router,
-        userInfo,
-        success,
-        loginSuccess,
-        loginError,
-        userLoginInfo,
-        toast,
-    ]);
+    }, [router, userInfo]);
 
     useEffect(() => {
         if (error) {
