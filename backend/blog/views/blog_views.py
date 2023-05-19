@@ -7,13 +7,26 @@ from blog.models import *
 from blog.serializers import *
 
 from rest_framework import status
+from datetime import datetime, timedelta
 
 
 @api_view(["GET"])
 def get_blog_posts(request):
-    posts = BlogPost.objects.filter(draft=False).order_by("-id")
-    serializer = BlogPostSerializer(posts, many=True)
-    return Response(serializer.data)
+    latest_posts = BlogPost.objects.filter(draft=False).order_by("-id")[:7]
+    latest_serializer = BlogPostSerializer(latest_posts, many=True)
+
+    past_week = datetime.now() - timedelta(days=7)
+    trending_posts = BlogPost.objects.filter(
+        draft=False, published__gte=past_week
+    ).order_by("views")[:7]
+    trending_serializer = BlogPostSerializer(trending_posts, many=True)
+
+    return Response(
+        {
+            "latest_posts": latest_serializer.data,
+            "trending_posts": trending_serializer.data,
+        }
+    )
 
 
 @api_view(["GET"])

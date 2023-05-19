@@ -16,7 +16,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Badge } from "@/components/ui/badge";
+import { Badge, badgeVariants } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Eye, ChevronLeft } from "lucide-react";
 
@@ -32,6 +32,7 @@ interface BlogPostInterface {
     published: string;
     cover_image: string;
     content: string;
+    tags: string[];
     error: string | any;
     loading: boolean;
 }
@@ -54,6 +55,7 @@ export default function PostPage() {
         draft,
         published,
         cover_image,
+        tags,
         content,
         error,
     }: BlogPostInterface = blogDetails;
@@ -173,6 +175,19 @@ export default function PostPage() {
                             alt={`${title}s cover image`}
                             className="w-full aspect-video object-cover rounded-lg mt-4"
                         />
+                        <div className="mt-2 flex gap-2">
+                            {tags.map((tag: string) => (
+                                <Link
+                                    key={tag}
+                                    className={`${badgeVariants({
+                                        variant: "secondary",
+                                    })} select-none`}
+                                    href={`/explore?tag=${tag}`}
+                                >
+                                    {tag}
+                                </Link>
+                            ))}
+                        </div>
                         <div className="mt-2 flex items-center gap-4">
                             <Button
                                 variant="secondary"
@@ -180,7 +195,7 @@ export default function PostPage() {
                                 className="px-1.5"
                             >
                                 <Link
-                                    href={`@${username}`}
+                                    href={`/@${username}`}
                                     className="flex items-center gap-1.5"
                                 >
                                     <div className="flex aspect-square w-[30px] items-center justify-center rounded-md bg-slate-400 dark:bg-slate-700">

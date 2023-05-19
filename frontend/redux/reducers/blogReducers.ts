@@ -60,6 +60,7 @@ export const blogDetailsReducer = (state = {}, action: any) => {
                 published: action.payload.published,
                 cover_image: action.payload.cover_image,
                 content: action.payload.content,
+                tags: action.payload.tags,
             };
 
         case BLOG_DETAIL_FAIL:
