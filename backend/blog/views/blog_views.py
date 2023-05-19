@@ -97,4 +97,4 @@ def add_post_view_count(request, pk):
     view_count.views += 1
     view_count.save()
 
-    return Response({"detail": "Updated view count"}, status=status.HTTP_200_OK)
+    return Response({"detail": "Updated view count."}, status=status.HTTP_200_OK)

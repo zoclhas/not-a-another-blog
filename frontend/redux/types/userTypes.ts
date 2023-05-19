@@ -7,3 +7,7 @@ export const USER_LOGOUT: string = "USER_LOGOUT";
 export const USER_REGISTER_REQUEST: string = "USER_REGISTER_REQUEST";
 export const USER_REGISTER_SUCCESS: string = "USER_REGISTER_SUCCESS";
 export const USER_REGISTER_FAIL: string = "USER_REGISTER_FAIL";
+
+export const USER_DETAIL_REQUEST: string = "USER_DETAIL_REQUEST";
+export const USER_DETAIL_SUCCESS: string = "USER_DETAIL_SUCCESS";
+export const USER_DETAIL_FAIL: string = "USER_DETAIL_FAIL";

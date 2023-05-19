@@ -7,6 +7,10 @@ import {
     USER_REGISTER_REQUEST,
     USER_REGISTER_SUCCESS,
     USER_REGISTER_FAIL,
+    //
+    USER_DETAIL_REQUEST,
+    USER_DETAIL_SUCCESS,
+    USER_DETAIL_FAIL,
 } from "@/redux/types/userTypes";
 import axios from "axios";
 
@@ -94,3 +98,21 @@ export const register =
             });
         }
     };
+
+export const getUserDetail = (username: string) => async (dispatch: any) => {
+    try {
+        dispatch({ type: USER_DETAIL_REQUEST });
+
+        const { data } = await axios.get(`${url}/api/u/${username}/`);
+
+        dispatch({
+            type: USER_DETAIL_SUCCESS,
+            payload: data,
+        });
+    } catch (error) {
+        dispatch({
+            type: USER_DETAIL_FAIL,
+            payload: error.response.data.detail || error,
+        });
+    }
+};

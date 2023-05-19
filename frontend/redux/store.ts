@@ -4,7 +4,11 @@ import { createStore, combineReducers, Store, applyMiddleware } from "redux";
 import thunkMiddleware from "redux-thunk";
 import { createWrapper, Context } from "next-redux-wrapper";
 import { composeWithDevTools } from "redux-devtools-extension";
-import { userLoginReducer, userRegisterReducer } from "./reducers/userReducers";
+import {
+    userLoginReducer,
+    userRegisterReducer,
+    userDetailReducer,
+} from "./reducers/userReducers";
 import { myBlogsReducer, blogDetailsReducer } from "./reducers/blogReducers";
 import { useMemo } from "react";
 
@@ -12,6 +16,8 @@ import { useMemo } from "react";
 const reducers = combineReducers({
     userLogin: userLoginReducer,
     userRegister: userRegisterReducer,
+    userDetail: userDetailReducer,
+    //
     myBlogs: myBlogsReducer,
     blogDetails: blogDetailsReducer,
 });

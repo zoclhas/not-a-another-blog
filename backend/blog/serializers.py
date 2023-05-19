@@ -77,7 +77,7 @@ class UserProfile(generics.ListAPIView):
             return BlogPost.objects.filter(user=user, draft=False)
         except User.DoesNotExist:
             return Response(
-                {"detail": "User does not exist"}, status=status.HTTP_404_NOT_FOUND
+                {"detail": "User does not exist."}, status=status.HTTP_404_NOT_FOUND
             )
         except Exception as e:
             return Response({"detail": e}, status=status.HTTP_400_BAD_REQUEST)
@@ -96,7 +96,7 @@ class UserProfile(generics.ListAPIView):
             return Response(data)
         except User.DoesNotExist:
             return Response(
-                {"detail": "User does not exist"}, status=status.HTTP_404_NOT_FOUND
+                {"detail": "User does not exist."}, status=status.HTTP_404_NOT_FOUND
             )
         except Exception as e:
             return Response({"detail": e}, status=status.HTTP_400_BAD_REQUEST)
