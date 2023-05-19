@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
-from rest_framework import serializers
+from rest_framework import serializers, generics
+from rest_framework.response import Response
 from .models import *
 
 
@@ -62,3 +63,24 @@ class BlogPostSerializer(serializers.ModelSerializer):
         user = obj.user
         serializer = UserSerializer(user, many=False)
         return serializer.data["username"]
+
+
+class UserProfile(generics.ListAPIView):
+    serializer_class = BlogPostSerializer
+
+    def get_queryset(self):
+        username = self.kwargs["username"]
+        user = User.objects.get(username=username)
+        return BlogPost.objects.filter(user=user, draft=False)
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(queryset, many=True)
+        user = User.objects.get(username=self.kwargs["username"])
+        data = {
+            "username": user.username,
+            "created_at": str(user.date_joined)[:10],
+            "blog_count": queryset.count(),
+            "blogs": serializer.data,
+        }
+        return Response(data)
