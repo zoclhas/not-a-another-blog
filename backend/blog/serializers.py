@@ -1,6 +1,8 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers, generics
 from rest_framework.response import Response
+from rest_framework import status
+
 from .models import *
 
 
@@ -70,17 +72,31 @@ class UserProfile(generics.ListAPIView):
 
     def get_queryset(self):
         username = self.kwargs["username"]
-        user = User.objects.get(username=username)
-        return BlogPost.objects.filter(user=user, draft=False)
+        try:
+            user = User.objects.get(username=username)
+            return BlogPost.objects.filter(user=user, draft=False)
+        except User.DoesNotExist:
+            return Response(
+                {"detail": "User does not exist"}, status=status.HTTP_404_NOT_FOUND
+            )
+        except Exception as e:
+            return Response({"detail": e}, status=status.HTTP_400_BAD_REQUEST)
 
     def list(self, request, *args, **kwargs):
-        queryset = self.get_queryset()
-        serializer = self.get_serializer(queryset, many=True)
-        user = User.objects.get(username=self.kwargs["username"])
-        data = {
-            "username": user.username,
-            "created_at": str(user.date_joined)[:10],
-            "blog_count": queryset.count(),
-            "blogs": serializer.data,
-        }
-        return Response(data)
+        try:
+            queryset = self.get_queryset()
+            serializer = self.get_serializer(queryset, many=True)
+            user = User.objects.get(username=self.kwargs["username"])
+            data = {
+                "username": user.username,
+                "created_at": str(user.date_joined)[:10],
+                "blog_count": queryset.count(),
+                "blogs": serializer.data,
+            }
+            return Response(data)
+        except User.DoesNotExist:
+            return Response(
+                {"detail": "User does not exist"}, status=status.HTTP_404_NOT_FOUND
+            )
+        except Exception as e:
+            return Response({"detail": e}, status=status.HTTP_400_BAD_REQUEST)
