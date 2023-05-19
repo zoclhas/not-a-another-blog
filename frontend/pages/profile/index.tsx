@@ -143,8 +143,15 @@ export default function Profile() {
                                                         className="flex flex-col justify-between"
                                                     >
                                                         <CardHeader>
-                                                            <CardTitle>
+                                                            <CardTitle className="flex gap-2 justify-between">
                                                                 {blog.title}
+                                                                <span className="flex items-center">
+                                                                    <Eye className="scale-[0.8]" />
+                                                                    &nbsp;
+                                                                    {
+                                                                        blog.view_count
+                                                                    }
+                                                                </span>
                                                             </CardTitle>
                                                         </CardHeader>
 
@@ -226,8 +233,15 @@ export default function Profile() {
                                                         className="flex flex-col justify-between"
                                                     >
                                                         <CardHeader>
-                                                            <CardTitle>
+                                                            <CardTitle className="flex gap-2 justify-between">
                                                                 {draft.title}
+                                                                <span className="flex items-center">
+                                                                    <Eye className="scale-[0.8]" />
+                                                                    &nbsp;
+                                                                    {
+                                                                        draft.view_count
+                                                                    }
+                                                                </span>
                                                             </CardTitle>
                                                         </CardHeader>
 
