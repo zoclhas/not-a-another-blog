@@ -20,7 +20,7 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Eye, ChevronLeft } from "lucide-react";
 
-import { getBlogDetails } from "@/redux/actions/blogActions";
+import { getBlogDetails, addBlogViews } from "@/redux/actions/blogActions";
 
 interface BlogPostInterface {
     id: number;
@@ -59,8 +59,10 @@ export default function PostPage() {
     }: BlogPostInterface = blogDetails;
 
     useEffect(() => {
-        if (!isNaN(Number(blogId)))
+        if (!isNaN(Number(blogId))) {
             dispatch(getBlogDetails(Number(blogId)) as any);
+            dispatch(addBlogViews(Number(blogId)) as any);
+        }
     }, [dispatch, blogId]);
 
     useEffect(() => {
@@ -148,9 +150,13 @@ export default function PostPage() {
                         {title}
                     </h1>
                     <h3 className="mt-4 opacity-40 flex gap-4 items-center">
-                        {published} <span>|</span>
+                        {published}{" "}
+                        <Separator
+                            orientation="vertical"
+                            className="grow h-full"
+                        />
                         <span className="flex items-center font-bold tabular-nums">
-                            <Eye />
+                            <Eye className="scale-[0.8]" />
                             <span className="relative bottom-[1px]">
                                 &nbsp;{view_count}
                             </span>

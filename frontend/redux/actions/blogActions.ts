@@ -6,6 +6,10 @@ import {
     BLOG_DETAIL_REQUEST,
     BLOG_DETAIL_SUCCESS,
     BLOG_DETAIL_FAIL,
+    //
+    ADD_BLOG_VIEWS_REQUEST,
+    ADD_BLOG_VIEWS_SUCCESS,
+    ADD_BLOG_VIEWS_FAIL,
 } from "@/redux/types/blogTypes";
 import axios from "axios";
 
@@ -61,7 +65,7 @@ export const getBlogDetails =
             };
 
             const { data } = await axios.get(
-                `${url}/api/blog/${blogId}`,
+                `${url}/api/blog/${blogId}/`,
                 config
             );
             dispatch({
@@ -71,6 +75,25 @@ export const getBlogDetails =
         } catch (error: any) {
             dispatch({
                 type: BLOG_DETAIL_FAIL,
+                payload: error.response.data.detail
+                    ? error.response.data.detail
+                    : error,
+            });
+        }
+    };
+
+export const addBlogViews =
+    (blogId: number) => async (dispatch: any, getState: any) => {
+        try {
+            dispatch({ type: ADD_BLOG_VIEWS_REQUEST });
+
+            await axios.post(`${url}/api/update-blog-views/${blogId}/`);
+            dispatch({
+                type: ADD_BLOG_VIEWS_SUCCESS,
+            });
+        } catch (error: any) {
+            dispatch({
+                type: ADD_BLOG_VIEWS_FAIL,
                 payload: error.response.data.detail
                     ? error.response.data.detail
                     : error,

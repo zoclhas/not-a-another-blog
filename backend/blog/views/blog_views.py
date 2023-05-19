@@ -70,3 +70,18 @@ def get_post(request, pk):
 
     serializer = BlogPostSerializer(post, many=False)
     return Response(serializer.data)
+
+
+@api_view(["POST"])
+def add_post_view_count(request, pk):
+    post = BlogPost.objects.get(id=pk)
+
+    if post.draft:
+        content = {"detail": "Blog doesn't exist or is draft."}
+        return Response(content, status=status.HTTP_400_BAD_REQUEST)
+
+    view_count = BlogPostViews.objects.get(post=post)
+    view_count.views += 1
+    view_count.save()
+
+    return Response({"detail": "Updated view count"}, status=status.HTTP_200_OK)

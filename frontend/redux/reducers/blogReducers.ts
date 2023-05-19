@@ -6,6 +6,10 @@ import {
     BLOG_DETAIL_REQUEST,
     BLOG_DETAIL_SUCCESS,
     BLOG_DETAIL_FAIL,
+    //
+    ADD_BLOG_VIEWS_REQUEST,
+    ADD_BLOG_VIEWS_SUCCESS,
+    ADD_BLOG_VIEWS_FAIL,
 } from "@/redux/types/blogTypes";
 
 export const myBlogsReducer = (state = {}, action: any) => {
@@ -59,6 +63,30 @@ export const blogDetailsReducer = (state = {}, action: any) => {
             };
 
         case BLOG_DETAIL_FAIL:
+            return {
+                loading: false,
+                error: action.payload,
+            };
+
+        default:
+            return state;
+    }
+};
+
+export const addBlogViewsReducer = (state = {}, action: any) => {
+    switch (action.type) {
+        case ADD_BLOG_VIEWS_REQUEST:
+            return {
+                loading: true,
+            };
+
+        case ADD_BLOG_VIEWS_SUCCESS:
+            return {
+                loading: false,
+                success: true,
+            };
+
+        case ADD_BLOG_VIEWS_FAIL:
             return {
                 loading: false,
                 error: action.payload,
