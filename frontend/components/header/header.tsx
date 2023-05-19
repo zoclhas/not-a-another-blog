@@ -39,17 +39,17 @@ export const Header = ({
     const [isNavbarVisible, setIsNavbarVisible] = useState(true);
     const [lastScrollY, setLastScrollY] = useState(0);
 
-    const controlNavbar = () => {
-        if (window.scrollY > lastScrollY) {
-            setIsNavbarVisible(true);
-        } else {
-            setIsNavbarVisible(false);
-        }
-
-        setLastScrollY(window.scrollY);
-    };
-
     useEffect(() => {
+        const controlNavbar = () => {
+            if (window.scrollY > lastScrollY) {
+                setIsNavbarVisible(true);
+            } else {
+                setIsNavbarVisible(false);
+            }
+
+            setLastScrollY(window.scrollY);
+        };
+
         if (typeof window !== "undefined") {
             window.addEventListener("scroll", controlNavbar, {
                 passive: true,
@@ -59,7 +59,9 @@ export const Header = ({
                 window.removeEventListener("scroll", controlNavbar);
             };
         }
-    }, [lastScrollY, controlNavbar]);
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [lastScrollY]);
 
     return (
         <nav

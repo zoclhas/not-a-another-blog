@@ -78,6 +78,7 @@ export const register =
                 type: USER_REGISTER_SUCCESS,
                 payload: data,
             });
+            dispatch({ type: USER_LOGIN_SUCCESS, payload: data });
 
             localStorage.setItem("userInfo", JSON.stringify(data));
         } catch (error: any) {
@@ -90,8 +91,10 @@ export const register =
                     ? error.response.data.username
                     : error.response.data.email
                     ? error.response.data.email
-                    : error.response.data.password
-                    ? error.response.data.password
+                    : error.response.data.password1
+                    ? error.response.data.password1
+                    : error.response.data.password1
+                    ? error.response.data.password2
                     : error.response.data.non_field_errors[0]
                     ? error.response.data.non_field_errors[0]
                     : error,

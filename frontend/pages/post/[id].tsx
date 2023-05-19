@@ -82,7 +82,7 @@ export default function PostPage() {
         if (content && anchorId.length > 1) {
             document.getElementById(anchorId[1])!.scrollIntoView();
         }
-    }, [content]);
+    }, [content, anchorId]);
 
     if (error) {
         return (

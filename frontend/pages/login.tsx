@@ -42,7 +42,7 @@ export default function Login() {
                 title: `Logged in as @${userInfo.user.username}!`,
             });
         }
-    }, [router, userInfo, success, toast, userInfo]);
+    }, [router, userInfo, success, toast]);
 
     // Error handling
     useEffect(() => {

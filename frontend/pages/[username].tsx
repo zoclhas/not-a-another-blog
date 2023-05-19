@@ -1,4 +1,5 @@
 import { useRouter } from "next/router";
+import Head from "next/head";
 import type { GetServerSideProps } from "next";
 
 type UserPageProps = {
@@ -19,6 +20,35 @@ export const getServerSideProps: GetServerSideProps<UserPageProps> = async ({
     return { notFound: true };
 };
 
+type UserDetail = {
+    username: string;
+    created_at: string;
+    blog_count: number;
+    blogs: BlogPostInterface;
+};
+
+interface BlogPostInterface {
+    id: number;
+    images: string[];
+    view_count: number;
+    username: string;
+    title: string;
+    draft: boolean;
+    published: string;
+    cover_image: string;
+    content: string;
+    tags: string[];
+    error: string | any;
+    loading: boolean;
+}
+
 export default function UserPage({ user }: UserPageProps) {
-    return <>Hello, {user}</>;
+    return (
+        <>
+            <Head>
+                <title>NAAB {`| @${user}`}</title>
+            </Head>
+            Hello, {user}
+        </>
+    );
 }

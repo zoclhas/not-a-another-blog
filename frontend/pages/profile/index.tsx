@@ -53,7 +53,7 @@ export default function Profile() {
 
     useEffect(() => {
         if (!userInfo || !userInfo.user.username) router.push("/login");
-    }, [userInfo]);
+    }, [userInfo, router]);
 
     useEffect(() => {
         if (userError || error) {
@@ -69,7 +69,7 @@ export default function Profile() {
 
     useEffect(() => {
         dispatch(getMyBlogs(currentPage ? currentPage : 1) as any);
-    }, [dispatch, getMyBlogs]);
+    }, [dispatch, currentPage]);
 
     if (userInfo) {
         return (

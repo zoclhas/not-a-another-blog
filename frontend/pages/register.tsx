@@ -43,7 +43,7 @@ export default function Register() {
                 title: `Logged in as @${userLoginInfo.user.username}`,
             });
         }
-    }, [router, userInfo]);
+    }, [router, toast, userLoginInfo]);
 
     useEffect(() => {
         if (error) {
