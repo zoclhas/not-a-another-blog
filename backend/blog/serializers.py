@@ -24,6 +24,7 @@ class BlogPostViewsSerializer(serializers.ModelSerializer):
 class BlogPostSerializer(serializers.ModelSerializer):
     images = serializers.SerializerMethodField(read_only=True)
     view_count = serializers.SerializerMethodField(read_only=True)
+    tags = serializers.SerializerMethodField(read_only=True)
     username = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
@@ -46,6 +47,14 @@ class BlogPostSerializer(serializers.ModelSerializer):
             else:
                 count = 0
             return count
+        except Exception as e:
+            return e
+
+    def get_tags(self, obj):
+        try:
+            items = obj.tags.all()
+            tags = [item.tag for item in items]
+            return tags
         except Exception as e:
             return e
 

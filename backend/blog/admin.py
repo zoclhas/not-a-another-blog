@@ -6,3 +6,4 @@ from .models import *
 admin.site.register(BlogPost)
 admin.site.register(BlogImageLink)
 admin.site.register(BlogPostViews)
+admin.site.register(BlogPostTag)

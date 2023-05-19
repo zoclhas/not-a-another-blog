@@ -72,6 +72,16 @@ class BlogPostViews(models.Model):
         verbose_name_plural = "Blog post views"
 
 
+class BlogPostTag(models.Model):
+    post = models.ForeignKey(
+        BlogPost, on_delete=models.CASCADE, null=True, blank=True, related_name="tags"
+    )
+    tag = models.CharField(max_length=200, null=False, blank=False)
+
+    def __str__(self):
+        return f"@{self.post.user} - {self.post.title} - {self.tag}"
+
+
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 

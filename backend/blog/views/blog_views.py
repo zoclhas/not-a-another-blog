@@ -11,7 +11,7 @@ from rest_framework import status
 
 @api_view(["GET"])
 def get_blog_posts(request):
-    posts = BlogPost.objects.fitler(draft=False).order_by("-id")
+    posts = BlogPost.objects.filter(draft=False).order_by("-id")
     serializer = BlogPostSerializer(posts, many=True)
     return Response(serializer.data)
 
