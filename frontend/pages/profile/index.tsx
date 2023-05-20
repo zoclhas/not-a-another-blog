@@ -20,6 +20,17 @@ import { Eye, Edit } from "lucide-react";
 
 import { getMyBlogs } from "@/redux/actions/blogActions";
 
+interface MyBlogDetails {
+    loading: boolean;
+    error: string;
+    blogs: BlogInterface[];
+    total_blogs: number;
+    drafts: BlogInterface[];
+    total_drafts: number;
+    page: number;
+    pages: number;
+}
+
 interface BlogInterface {
     id: number;
     images: string[];
@@ -30,6 +41,12 @@ interface BlogInterface {
     published: string;
     cover_image: string;
     content: string;
+}
+
+interface BlogComponent {
+    blogs: BlogInterface[];
+    page: number;
+    pages: number;
 }
 
 export default function Profile() {
@@ -49,7 +66,7 @@ export default function Profile() {
         total_drafts,
         page,
         pages,
-    } = myBlogs;
+    }: MyBlogDetails = myBlogs;
 
     useEffect(() => {
         if (!userInfo || !userInfo.user.username) router.push("/login");
@@ -65,10 +82,9 @@ export default function Profile() {
         }
     }, [userError, toast, error]);
 
-    let currentPage = Number(router.query["page"]);
-
+    const currentPage = Number(router.query["page"]);
     useEffect(() => {
-        dispatch(getMyBlogs(currentPage ? currentPage : 1) as any);
+        dispatch(getMyBlogs(currentPage || 1) as any);
     }, [dispatch, currentPage]);
 
     if (userInfo) {
@@ -131,87 +147,11 @@ export default function Profile() {
                         ) : (
                             <>
                                 {blogs && (
-                                    <div id="posts">
-                                        <h1 className="mb-2 text-4xl font-bold">
-                                            Posts
-                                        </h1>
-                                        <div className="grid grid-cols-3 gap-1.5 max-md:grid-cols-2 max-sm:grid-cols-1">
-                                            {blogs.map(
-                                                (blog: BlogInterface) => (
-                                                    <Card
-                                                        key={String(blog.id)}
-                                                        className="flex flex-col justify-between"
-                                                    >
-                                                        <CardHeader>
-                                                            <CardTitle className="flex gap-2 justify-between">
-                                                                {blog.title}
-                                                                <span className="flex items-center">
-                                                                    <Eye className="scale-[0.8]" />
-                                                                    &nbsp;
-                                                                    {
-                                                                        blog.view_count
-                                                                    }
-                                                                </span>
-                                                            </CardTitle>
-                                                        </CardHeader>
-
-                                                        <CardContent>
-                                                            <Image
-                                                                src={`${process.env.NEXT_PUBLIC_API_URL}${blog.cover_image}`}
-                                                                alt={blog.title}
-                                                                width={260}
-                                                                height={140}
-                                                                className="h-full w-full rounded-md object-fill"
-                                                            />
-                                                        </CardContent>
-
-                                                        <CardFooter className="flex gap-1.5">
-                                                            <Button
-                                                                className="w-full"
-                                                                variant="default"
-                                                                asChild
-                                                            >
-                                                                <Link
-                                                                    href={`/post/${blog.id}`}
-                                                                >
-                                                                    <Eye />
-                                                                    &nbsp;View
-                                                                </Link>
-                                                            </Button>
-
-                                                            <Button
-                                                                className="w-full"
-                                                                variant="secondary"
-                                                                asChild
-                                                            >
-                                                                <Link
-                                                                    href={`/post/${blog.id}/edit`}
-                                                                >
-                                                                    <Edit />
-                                                                    &nbsp;Edit
-                                                                </Link>
-                                                            </Button>
-                                                        </CardFooter>
-                                                    </Card>
-                                                )
-                                            )}
-                                        </div>
-                                        {blogs.length <= 0 && (
-                                            <Card>
-                                                <CardHeader>
-                                                    <CardTitle>
-                                                        You have no Blogs.
-                                                    </CardTitle>
-                                                </CardHeader>
-                                            </Card>
-                                        )}
-
-                                        <PaginatedItems
-                                            itemsPerPage={6}
-                                            totalCount={pages}
-                                            page={page}
-                                        />
-                                    </div>
+                                    <Blogs
+                                        blogs={blogs}
+                                        page={page}
+                                        pages={pages}
+                                    />
                                 )}
 
                                 {drafts && (
@@ -407,3 +347,79 @@ export default function Profile() {
         </>
     );
 }
+
+const Blogs = ({ blogs, page, pages }: BlogComponent) => {
+    return (
+        <>
+            <div id="posts">
+                <h1 className="mb-2 text-4xl font-bold">Posts</h1>
+                <div className="grid grid-cols-3 gap-1.5 max-md:grid-cols-2 max-sm:grid-cols-1">
+                    {blogs.map((blog: BlogInterface) => (
+                        <Card
+                            key={String(blog.id)}
+                            className="flex flex-col justify-between"
+                        >
+                            <CardHeader>
+                                <CardTitle className="flex gap-2 justify-between">
+                                    {blog.title}
+                                    <span className="flex items-center">
+                                        <Eye className="scale-[0.8]" />
+                                        &nbsp;
+                                        {blog.view_count}
+                                    </span>
+                                </CardTitle>
+                            </CardHeader>
+
+                            <CardContent>
+                                <Image
+                                    src={`${process.env.NEXT_PUBLIC_API_URL}${blog.cover_image}`}
+                                    alt={blog.title}
+                                    width={260}
+                                    height={140}
+                                    className="h-full w-full rounded-md object-fill"
+                                />
+                            </CardContent>
+
+                            <CardFooter className="flex gap-1.5">
+                                <Button
+                                    className="w-full"
+                                    variant="default"
+                                    asChild
+                                >
+                                    <Link href={`/post/${blog.id}`}>
+                                        <Eye />
+                                        &nbsp;View
+                                    </Link>
+                                </Button>
+
+                                <Button
+                                    className="w-full"
+                                    variant="secondary"
+                                    asChild
+                                >
+                                    <Link href={`/post/${blog.id}/edit`}>
+                                        <Edit />
+                                        &nbsp;Edit
+                                    </Link>
+                                </Button>
+                            </CardFooter>
+                        </Card>
+                    ))}
+                </div>
+                {blogs.length <= 0 && (
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>You have no Blogs.</CardTitle>
+                        </CardHeader>
+                    </Card>
+                )}
+
+                <PaginatedItems
+                    itemsPerPage={6}
+                    totalCount={pages}
+                    page={page}
+                />
+            </div>
+        </>
+    );
+};

@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
+from django.contrib.auth.models import User
 from blog.models import *
 from blog.serializers import *
 
@@ -98,3 +99,44 @@ def add_post_view_count(request, pk):
     view_count.save()
 
     return Response({"detail": "Updated view count."}, status=status.HTTP_200_OK)
+
+
+@api_view(["GET"])
+def get_user_detail(request, username):
+    try:
+        user = User.objects.get(username=username)
+        blogs = BlogPost.objects.filter(user=user, draft=False).order_by("-id")
+        total_blogs = len(BlogPost.objects.filter(user=user, draft=False))
+
+        page = request.query_params.get("page")
+        paginator = Paginator(blogs, 6)
+
+        try:
+            blogs = paginator.page(page)
+        except PageNotAnInteger:
+            blogs = paginator.page(1)
+        except EmptyPage:
+            blogs = paginator.page(paginator.num_pages)
+
+        if page == None:
+            page = 1
+
+        page = int(page)
+
+        serializer = BlogPostSerializer(blogs, many=True)
+        data = {
+            "username": user.username,
+            "created_at": str(user.date_joined)[:10],
+            "blog_count": total_blogs,
+            "blogs": serializer.data,
+            "page": page,
+            "pages": paginator.num_pages,
+        }
+
+        return Response(data)
+    except User.DoesNotExist:
+        return Response(
+            {"detail": "User does not exist."}, status=status.HTTP_404_NOT_FOUND
+        )
+    except Exception as e:
+        return Response({"detail": str(e)}, status=status.HTTP_400_BAD_REQUEST)

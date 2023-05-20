@@ -102,20 +102,23 @@ export const register =
         }
     };
 
-export const getUserDetail = (username: string) => async (dispatch: any) => {
-    try {
-        dispatch({ type: USER_DETAIL_REQUEST });
+export const getUserDetail =
+    (username: string, page) => async (dispatch: any) => {
+        try {
+            dispatch({ type: USER_DETAIL_REQUEST });
 
-        const { data } = await axios.get(`${url}/api/u/${username}/`);
+            const { data } = await axios.get(
+                `${url}/api/u/${username}/?page=${page}`
+            );
 
-        dispatch({
-            type: USER_DETAIL_SUCCESS,
-            payload: data,
-        });
-    } catch (error) {
-        dispatch({
-            type: USER_DETAIL_FAIL,
-            payload: error.response.data.detail || error,
-        });
-    }
-};
+            dispatch({
+                type: USER_DETAIL_SUCCESS,
+                payload: data,
+            });
+        } catch (error) {
+            dispatch({
+                type: USER_DETAIL_FAIL,
+                payload: error.response.data.detail || error,
+            });
+        }
+    };

@@ -59,8 +59,6 @@ export const Header = ({
                 window.removeEventListener("scroll", controlNavbar);
             };
         }
-
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [lastScrollY]);
 
     return (

@@ -79,6 +79,8 @@ export const userDetailReducer = (state = {}, action: any) => {
                 created_at: action.payload.created_at,
                 blog_count: action.payload.blog_count,
                 blogs: action.payload.blogs,
+                page: action.payload.page,
+                pages: action.payload.pages,
             };
 
         case USER_DETAIL_FAIL:
