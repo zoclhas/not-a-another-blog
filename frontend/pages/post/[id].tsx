@@ -63,7 +63,6 @@ export default function PostPage() {
     useEffect(() => {
         if (!isNaN(Number(blogId))) {
             dispatch(getBlogDetails(Number(blogId)) as any);
-            dispatch(addBlogViews(Number(blogId)) as any);
         }
     }, [dispatch, blogId]);
 
@@ -76,6 +75,12 @@ export default function PostPage() {
             });
         }
     }, [error, toast]);
+
+    useEffect(() => {
+        if (title) {
+            dispatch(addBlogViews(Number(blogId)) as any);
+        }
+    }, [title, blogId]);
 
     const anchorId = router.asPath.split("#");
     useEffect(() => {

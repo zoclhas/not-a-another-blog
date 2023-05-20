@@ -82,7 +82,6 @@ export const register =
 
             localStorage.setItem("userInfo", JSON.stringify(data));
         } catch (error: any) {
-            console.log(error);
             dispatch({
                 type: USER_REGISTER_FAIL,
                 payload: error.response.data.detail
@@ -103,12 +102,13 @@ export const register =
     };
 
 export const getUserDetail =
-    (username: string, page) => async (dispatch: any) => {
+    (username: string, page: string | number, sort: string) =>
+    async (dispatch: any) => {
         try {
             dispatch({ type: USER_DETAIL_REQUEST });
 
             const { data } = await axios.get(
-                `${url}/api/u/${username}/?page=${page}`
+                `${url}/api/u/${username}/?page=${page}&sort=${sort}`
             );
 
             dispatch({

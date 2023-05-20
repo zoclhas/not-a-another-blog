@@ -64,7 +64,7 @@ export const Header = ({
     return (
         <nav
             className={`${cn(
-                "ease sticky z-[1000]  flex h-[76px] items-center justify-between gap-4 border-b bg-inherit bg-opacity-80 px-4 backdrop-blur-[10px] transition-all duration-300 max-md:fixed max-md:bottom-0 max-md:w-full max-md:border-b-0 max-md:border-t md:top-0",
+                "ease sticky z-[1000]  flex h-[76px] items-center justify-between gap-4 border-b bg-[#fff] bg-opacity-80 dark:bg-[#030711] dark:bg-opacity-80 px-4 backdrop-blur-[10px] transition-all duration-300 max-md:fixed max-md:bottom-0 max-md:w-full max-md:border-b-0 max-md:border-t md:top-0",
                 className
             )} ${!isNavbarVisible ? "md:top-0" : "md:top-[-76px]"}`}
             {...props}

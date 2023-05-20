@@ -24,11 +24,14 @@ export const PaginatedItems = ({
 }: PaginatedItemsInterface) => {
     const router = useRouter();
 
-    // Invoke when user click to request another page.
+    const queryParams = { ...router.query };
+    if (queryParams.username) delete queryParams.username;
+
     const handlePageClick = (event: any) => {
         router.push({
             pathname: currentPage || router.pathname,
             query: {
+                ...queryParams,
                 page: event.nextSelectedPage + 1,
             },
         });

@@ -18,13 +18,13 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge, badgeVariants } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
 import {
     Tooltip,
     TooltipContent,
     TooltipProvider,
     TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { SortSelect } from "@/components/sort-select/sortSelect";
 import { Eye, ChevronLeft, Copy } from "lucide-react";
 
 import { getUserDetail } from "@/redux/actions/userActions";
@@ -74,7 +74,7 @@ export default function UserPage({ user }: UserPageProps) {
     }: UserDetail = userDetail;
 
     useEffect(() => {
-        dispatch(getUserDetail(user, 1) as any);
+        dispatch(getUserDetail(user, 1, "latest") as any);
     }, [dispatch]);
 
     useEffect(() => {
@@ -88,9 +88,10 @@ export default function UserPage({ user }: UserPageProps) {
     }, [error, toast]);
 
     const currentPage = Number(router.query["page"]);
+    const sortOption = String(router.query["sort"]);
     useEffect(() => {
-        dispatch(getUserDetail(user, currentPage || 1) as any);
-    }, [dispatch, currentPage]);
+        dispatch(getUserDetail(user, currentPage || 1, sortOption) as any);
+    }, [dispatch, currentPage, sortOption]);
 
     const copyUsernameHandler = () => {
         navigator.clipboard.writeText(`https://naab.zocs.space/@${username}`);
@@ -143,7 +144,7 @@ export default function UserPage({ user }: UserPageProps) {
                     <Skeleton className="h-9 w-[400px]" />
                 </div>
                 <div id="posts" className="mt-4">
-                    <div className="grid grid-cols-3 gap-1.5 max-md:grid-cols-2 max-sm:grid-cols-1">
+                    <div className="grid grid-cols-3 gap-1.5 max-sm:grid-cols-1">
                         {[0, 1, 2, 3, 4, 5].map((index) => (
                             <Card key={index}>
                                 <Skeleton className="h-[200px]" />
@@ -201,7 +202,7 @@ export default function UserPage({ user }: UserPageProps) {
                             </TooltipProvider>
                         </h1>
                         <p className="opacity-40 text-sm">
-                            Member Since: {created_at}
+                            Member since: {created_at}
                         </p>
                     </div>
                 </div>
@@ -224,9 +225,20 @@ export default function UserPage({ user }: UserPageProps) {
                         currentPage={`@${username}`}
                     />
                 </div>
+                <div className="my-4">
+                    <SortSelect
+                        items={[
+                            { value: "latest", label: "Latest" },
+                            { value: "oldest", label: "Oldest" },
+                            { value: "views-asd", label: "Views: Ascending" },
+                            { value: "views-dsd", label: "Views: Descending" },
+                        ]}
+                        currentPage={`@${username}`}
+                    />
+                </div>
                 {blogs && (
                     <div id="posts" className="mt-4">
-                        <div className="grid grid-cols-2 gap-1.5 max-md:grid-cols-2 max-sm:grid-cols-1">
+                        <div className="grid grid-cols-2 gap-1.5 max-sm:grid-cols-1">
                             {blogs.map((blog) => (
                                 <Card
                                     key={blog.id}
@@ -270,6 +282,9 @@ export default function UserPage({ user }: UserPageProps) {
 
                                     <CardHeader>
                                         <CardTitle>{blog.title}</CardTitle>
+                                        <CardDescription>
+                                            {blog.published}
+                                        </CardDescription>
                                     </CardHeader>
 
                                     <CardFooter>
