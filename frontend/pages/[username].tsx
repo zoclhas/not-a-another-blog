@@ -76,10 +76,6 @@ export default function UserPage({ user }: UserPageProps) {
     }: UserDetail = userDetail;
 
     useEffect(() => {
-        dispatch(getUserDetail(user, 1, "latest", "") as any);
-    }, [dispatch, user]);
-
-    useEffect(() => {
         if (error) {
             toast({
                 variant: "destructive",
@@ -89,19 +85,24 @@ export default function UserPage({ user }: UserPageProps) {
         }
     }, [error, toast]);
 
-    const currentPage = Number(router.query["page"]);
-    const sortOption = String(router.query["sort"]);
-    const query = String(router.query["q"]);
+    const currentPage = Number(router.query["page"]) || 1;
+    const sortOption = router.query["sort"] || "latest";
+    const query = router.query["q"] || "";
     useEffect(() => {
         dispatch(
-            getUserDetail(user, currentPage || 1, sortOption, query) as any
+            getUserDetail(
+                user,
+                currentPage,
+                String(sortOption),
+                String(query)
+            ) as any
         );
     }, [dispatch, currentPage, sortOption, user, query]);
 
     const copyUsernameHandler = () => {
         navigator.clipboard.writeText(`https://naab.zocs.space/@${username}`);
         toast({
-            title: "Copied link to profile",
+            title: "Copied link to clipboard",
         });
     };
 
@@ -230,104 +231,99 @@ export default function UserPage({ user }: UserPageProps) {
                     </Badge>
                 </div>
 
+                <div className="mt-12 flex gap-4">
+                    <h1 className="font-bold text-3xl">Posts</h1>
+                    <PaginatedItems
+                        itemsPerPage={6}
+                        page={page}
+                        totalCount={pages}
+                        className="!p-0"
+                        currentPage={`@${username}`}
+                    />
+                </div>
+                <div className="my-4 flex gap-4 max-md:flex-col max-md:gap-2">
+                    <Search currentPage={`@${username}`} neglect="username" />
+                    <SortSelect
+                        items={[
+                            { value: "latest", label: "Latest" },
+                            { value: "oldest", label: "Oldest" },
+                            {
+                                value: "views-asd",
+                                label: "Views: Ascending",
+                            },
+                            {
+                                value: "views-dsd",
+                                label: "Views: Descending",
+                            },
+                        ]}
+                        currentPage={`@${username}`}
+                    />
+                </div>
                 {blogs && blogs.length > 0 ? (
-                    <>
-                        <div className="mt-12 flex gap-4">
-                            <h1 className="font-bold text-3xl">Posts</h1>
-                            <PaginatedItems
-                                itemsPerPage={6}
-                                page={page}
-                                totalCount={pages}
-                                className="!p-0"
-                                currentPage={`@${username}`}
-                            />
-                        </div>
-                        <div className="my-4 flex gap-4 max-md:flex-col max-md:gap-2">
-                            <Search
-                                currentPage={`@${username}`}
-                                neglect="username"
-                            />
-                            <SortSelect
-                                items={[
-                                    { value: "latest", label: "Latest" },
-                                    { value: "oldest", label: "Oldest" },
-                                    {
-                                        value: "views-asd",
-                                        label: "Views: Ascending",
-                                    },
-                                    {
-                                        value: "views-dsd",
-                                        label: "Views: Descending",
-                                    },
-                                ]}
-                                currentPage={`@${username}`}
-                            />
-                        </div>
-                        <div id="posts" className="mt-4">
-                            <div className="grid grid-cols-2 gap-1.5 max-sm:grid-cols-1">
-                                {blogs.map((blog) => (
-                                    <Card
-                                        key={blog.id}
-                                        className="flex flex-col justify-between overflow-hidden"
-                                    >
-                                        <div className="relative after:w-full after:h-full rounded-md overflow-hidden after:bg-gradient-to-t after:from-black dark:after:from-[#030711] after:to-20% dark:after:to-40% after:absolute after:z-[2] after:top-0 after:left-0">
-                                            <Image
-                                                src={`${process.env.NEXT_PUBLIC_API_URL}${blog.cover_image}`}
-                                                alt={blog.title + " image"}
-                                                width={429}
-                                                height={241}
-                                                className="aspect-video object-cover w-full rounded-b-md"
-                                            />
+                    <div id="posts" className="mt-4">
+                        <div className="grid grid-cols-2 gap-1.5 max-sm:grid-cols-1">
+                            {blogs.map((blog) => (
+                                <Card
+                                    key={blog.id}
+                                    className="flex flex-col justify-between overflow-hidden"
+                                >
+                                    <div className="relative after:w-full after:h-full rounded-md overflow-hidden after:bg-gradient-to-t after:from-black dark:after:from-[#030711] after:to-20% dark:after:to-40% after:absolute after:z-[2] after:top-0 after:left-0">
+                                        <Image
+                                            src={`${process.env.NEXT_PUBLIC_API_URL}${blog.cover_image}`}
+                                            alt={blog.title + " image"}
+                                            width={429}
+                                            height={241}
+                                            className="aspect-video object-cover w-full rounded-b-md"
+                                        />
 
-                                            {blog.tags && (
-                                                <div className="flex gap-1.5 absolute bottom-4 left-4 z-10 overflow-hidden max-w-full">
-                                                    {blog.tags.map(
-                                                        (tag: string) => (
-                                                            <Link
-                                                                key={tag}
-                                                                href={`/explore?tag=${tag}`}
-                                                                className={`${badgeVariants(
-                                                                    {
-                                                                        variant:
-                                                                            "default",
-                                                                    }
-                                                                )} text-md bg-[rgb(15,23,42,0.1)] dark:bg-white dark:bg-opacity-5 dark:text-white backdrop-blur-md select-none`}
-                                                            >
-                                                                {tag}
-                                                            </Link>
-                                                        )
-                                                    )}
-                                                </div>
-                                            )}
-
-                                            <div className="flex absolute bottom-4 right-4 z-10">
-                                                <Eye className="scale-[0.8]" />
-                                                &nbsp;{blog.view_count}
+                                        {blog.tags && (
+                                            <div className="flex gap-1.5 absolute bottom-4 left-4 z-10 overflow-hidden max-w-full">
+                                                {blog.tags.map(
+                                                    (tag: string) => (
+                                                        <Link
+                                                            key={tag}
+                                                            href={`/explore?tag=${tag}`}
+                                                            className={`${badgeVariants(
+                                                                {
+                                                                    variant:
+                                                                        "default",
+                                                                }
+                                                            )} text-md bg-[rgb(15,23,42,0.1)] dark:bg-white dark:bg-opacity-5 dark:text-white backdrop-blur-md select-none`}
+                                                        >
+                                                            {tag}
+                                                        </Link>
+                                                    )
+                                                )}
                                             </div>
+                                        )}
+
+                                        <div className="flex absolute bottom-4 right-4 z-10">
+                                            <Eye className="scale-[0.8]" />
+                                            &nbsp;{blog.view_count}
                                         </div>
+                                    </div>
 
-                                        <CardHeader>
-                                            <CardTitle>{blog.title}</CardTitle>
-                                            <CardDescription>
-                                                {blog.published}
-                                            </CardDescription>
-                                        </CardHeader>
+                                    <CardHeader>
+                                        <CardTitle>{blog.title}</CardTitle>
+                                        <CardDescription>
+                                            {blog.published}
+                                        </CardDescription>
+                                    </CardHeader>
 
-                                        <CardFooter>
-                                            <Button
-                                                asChild
-                                                className="w-full font-bold"
-                                            >
-                                                <Link href={`/post/${blog.id}`}>
-                                                    Read
-                                                </Link>
-                                            </Button>
-                                        </CardFooter>
-                                    </Card>
-                                ))}
-                            </div>
+                                    <CardFooter>
+                                        <Button
+                                            asChild
+                                            className="w-full font-bold"
+                                        >
+                                            <Link href={`/post/${blog.id}`}>
+                                                Read
+                                            </Link>
+                                        </Button>
+                                    </CardFooter>
+                                </Card>
+                            ))}
                         </div>
-                    </>
+                    </div>
                 ) : (
                     <Alert className="mt-8">
                         <AlertTitle className="font-bold mb-4 text-xl">
