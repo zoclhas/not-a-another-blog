@@ -45,7 +45,7 @@ export const SortSelect = ({ items, currentPage }: SelectInterface) => {
                     : items[0].value
             }
         >
-            <SelectTrigger className="w-[180px]">
+            <SelectTrigger className="w-[200px]">
                 <SelectValue placeholder="Sort" />
             </SelectTrigger>
             <SelectContent>

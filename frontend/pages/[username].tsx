@@ -24,8 +24,9 @@ import {
     TooltipProvider,
     TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { SortSelect } from "@/components/sort-select/sortSelect";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { SortSelect } from "@/components/sort-select/sortSelect";
+import { Search } from "@/components/search/search";
 import { Eye, ChevronLeft, Copy } from "lucide-react";
 
 import { getUserDetail } from "@/redux/actions/userActions";
@@ -75,7 +76,7 @@ export default function UserPage({ user }: UserPageProps) {
     }: UserDetail = userDetail;
 
     useEffect(() => {
-        dispatch(getUserDetail(user, 1, "latest") as any);
+        dispatch(getUserDetail(user, 1, "latest", "") as any);
     }, [dispatch, user]);
 
     useEffect(() => {
@@ -90,9 +91,12 @@ export default function UserPage({ user }: UserPageProps) {
 
     const currentPage = Number(router.query["page"]);
     const sortOption = String(router.query["sort"]);
+    const query = String(router.query["q"]);
     useEffect(() => {
-        dispatch(getUserDetail(user, currentPage || 1, sortOption) as any);
-    }, [dispatch, currentPage, sortOption, user]);
+        dispatch(
+            getUserDetail(user, currentPage || 1, sortOption, query) as any
+        );
+    }, [dispatch, currentPage, sortOption, user, query]);
 
     const copyUsernameHandler = () => {
         navigator.clipboard.writeText(`https://naab.zocs.space/@${username}`);
@@ -105,7 +109,7 @@ export default function UserPage({ user }: UserPageProps) {
         return (
             <>
                 <Head>
-                    <title>NAAB | @user</title>
+                    <title>NAAB | @{username}</title>
                     <meta name="title" content={`NAAB | ${username}`} />
                     <meta
                         name="description"
@@ -179,7 +183,7 @@ export default function UserPage({ user }: UserPageProps) {
     return (
         <>
             <Head>
-                <title>NAAB | @user</title>
+                <title>NAAB | @{username}</title>
                 <meta name="title" content={`NAAB | ${username}`} />
                 <meta
                     name="description"
@@ -238,7 +242,11 @@ export default function UserPage({ user }: UserPageProps) {
                                 currentPage={`@${username}`}
                             />
                         </div>
-                        <div className="my-4">
+                        <div className="my-4 flex gap-4 max-md:flex-col max-md:gap-2">
+                            <Search
+                                currentPage={`@${username}`}
+                                neglect="username"
+                            />
                             <SortSelect
                                 items={[
                                     { value: "latest", label: "Latest" },

@@ -102,13 +102,13 @@ export const register =
     };
 
 export const getUserDetail =
-    (username: string, page: string | number, sort: string) =>
+    (username: string, page: string | number, sort: string, query: string) =>
     async (dispatch: any) => {
         try {
             dispatch({ type: USER_DETAIL_REQUEST });
 
             const { data } = await axios.get(
-                `${url}/api/u/${username}/?page=${page}&sort=${sort}`
+                `${url}/api/u/${username}/?page=${page}&sort=${sort}&q=${query}`
             );
 
             dispatch({
