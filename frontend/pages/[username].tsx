@@ -144,7 +144,7 @@ export default function UserPage({ user }: UserPageProps) {
                     <Skeleton className="h-9 w-[400px]" />
                 </div>
                 <div id="posts" className="mt-4">
-                    <div className="grid grid-cols-3 gap-1.5 max-sm:grid-cols-1">
+                    <div className="grid grid-cols-2 gap-1.5 max-sm:grid-cols-1">
                         {[0, 1, 2, 3, 4, 5].map((index) => (
                             <Card key={index}>
                                 <Skeleton className="h-[200px]" />
