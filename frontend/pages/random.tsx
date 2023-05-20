@@ -4,7 +4,7 @@ import Link from "next/link";
 import Head from "next/head";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import type { GetServerSideProps } from "next";
+import { Markdown } from "@/components/markdown/markdown";
 
 import {
     Card,
@@ -18,11 +18,15 @@ import { useToast } from "@/components/ui/use-toast";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge, badgeVariants } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { Eye, ChevronLeft } from "lucide-react";
-import { Markdown } from "@/components/markdown/markdown";
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { Eye, ChevronLeft, RefreshCcw, Copy } from "lucide-react";
 
-import { getBlogDetails, addBlogViews } from "@/redux/actions/blogActions";
-import axios from "axios";
+import { getRandomBlog, addBlogViews } from "@/redux/actions/blogActions";
 
 interface BlogPostInterface {
     id: number;
@@ -39,19 +43,12 @@ interface BlogPostInterface {
     loading: boolean;
 }
 
-export default function PostPage({
-    meta_id,
-    meta_username,
-    meta_title,
-    meta_cover_image,
-}) {
+export default function Random() {
     const dispatch = useDispatch();
     const router = useRouter();
     const { toast } = useToast();
 
-    const blogId = router.query.id;
-
-    const blogDetails = useSelector((state: any) => state.blogDetails);
+    const blogDetails = useSelector((state: any) => state.blogRandom);
     const {
         loading,
         id,
@@ -68,33 +65,25 @@ export default function PostPage({
     }: BlogPostInterface = blogDetails;
 
     useEffect(() => {
-        if (!isNaN(Number(blogId))) {
-            dispatch(getBlogDetails(Number(blogId)) as any);
-        }
-    }, [dispatch, blogId]);
-
-    useEffect(() => {
-        if (error) {
-            toast({
-                variant: "destructive",
-                title: "Uh oh! Something went wrong.",
-                description: String(error),
-            });
-        }
-    }, [error, toast]);
+        dispatch(getRandomBlog() as any);
+    }, [dispatch]);
 
     useEffect(() => {
         if (title) {
-            dispatch(addBlogViews(Number(blogId)) as any);
+            dispatch(addBlogViews(id) as any);
         }
-    }, [title, blogId, dispatch]);
+    }, [title, id, dispatch]);
 
-    const anchorId = router.asPath.split("#");
-    useEffect(() => {
-        if (content && anchorId.length > 1) {
-            document.getElementById(anchorId[1])!.scrollIntoView();
-        }
-    }, [content, anchorId]);
+    const refreshHandler = () => {
+        dispatch(getRandomBlog() as any);
+    };
+
+    const copyLinkHandler = () => {
+        navigator.clipboard.writeText(`https://naab.zocs.space/post/${id}`);
+        toast({
+            title: "Copied post link to clipboard",
+        });
+    };
 
     if (error) {
         return (
@@ -127,10 +116,15 @@ export default function PostPage({
         return (
             <>
                 <Head>
-                    <title>NAAB | Post {blogId}</title>
+                    <title>NAAB | Random</title>
                 </Head>
                 <div className="mx-auto mt-4 max-h-[calc(100vh-76px-1rem)] max-w-2xl overflow-hidden px-4">
-                    <Skeleton className="h-8" />
+                    <div className="flex gap-2 justify-end">
+                        <Skeleton className="h-10 w-10" />
+                        <Skeleton className="h-10 w-10" />
+                    </div>
+
+                    <Skeleton className="h-8 mt-8" />
                     <Skeleton className="mt-1.5 h-8 max-w-[50%]" />
 
                     <Skeleton className="mt-4 aspect-video h-full" />
@@ -156,49 +150,50 @@ export default function PostPage({
     return (
         <>
             <Head>
-                <title>NAAB {title ? `| ${title}` : "| Loading"}</title>
-                <meta name="title" content={`NAAB - ${meta_title}`} />
+                <title>NAAB | Random</title>
+                <meta name="title" content="NAAB - Random" />
                 <meta
                     name="description"
-                    content={`@${meta_username} - ${meta_title}`}
-                />
-
-                <meta property="og:type" content="website" />
-                <meta
-                    property="og:url"
-                    content={`https://naab.zocs.space/${meta_id}`}
-                />
-                <meta property="og:title" content={`NAAB - ${meta_title}`} />
-                <meta
-                    property="og:description"
-                    content={`@${meta_username} - ${meta_title}`}
-                />
-                <meta
-                    property="og:image"
-                    content={`https://api.naab.zocs.space/${meta_cover_image}`}
-                />
-
-                <meta property="twitter:card" content="summary_large_image" />
-                <meta
-                    property="twitter:url"
-                    content={`https://naab.zocs.space/${meta_id}`}
-                />
-                <meta
-                    property="twitter:title"
-                    content={`NAAB - ${meta_title}`}
-                />
-                <meta
-                    property="twitter:description"
-                    content={`@${meta_username} - ${meta_title}`}
-                />
-                <meta
-                    property="twitter:image"
-                    content={`https://api.naab.zocs.space/${meta_cover_image}`}
+                    content="Bored? Try finding random blog posts."
                 />
             </Head>
             {content && (
                 <article className="mx-auto mt-4 max-w-2xl px-4">
-                    <h1 className="text-6xl max-sm:text-4xl font-bold">
+                    <div className="flex gap-2 justify-end">
+                        <TooltipProvider>
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <Button
+                                        variant="secondary"
+                                        className="aspect-square"
+                                        onClick={refreshHandler}
+                                    >
+                                        <RefreshCcw className="scale-[2]" />
+                                    </Button>
+                                </TooltipTrigger>
+                                <TooltipContent className="z-[1500]">
+                                    Randomise
+                                </TooltipContent>
+                            </Tooltip>
+                        </TooltipProvider>
+                        <TooltipProvider>
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <Button
+                                        variant="secondary"
+                                        className="aspect-square"
+                                        onClick={copyLinkHandler}
+                                    >
+                                        <Copy className="scale-[2]" />
+                                    </Button>
+                                </TooltipTrigger>
+                                <TooltipContent className="z-[1500]">
+                                    Randomise
+                                </TooltipContent>
+                            </Tooltip>
+                        </TooltipProvider>
+                    </div>
+                    <h1 className="text-6xl max-sm:text-4xl font-bold mt-8">
                         {title}
                     </h1>
                     <h3 className="mt-4 opacity-40 flex gap-4 items-center">
@@ -274,37 +269,3 @@ export default function PostPage({
         </>
     );
 }
-
-type MetaProps = {
-    meta_id: number;
-    meta_username: string;
-    meta_title: string;
-    meta_cover_image: string;
-};
-
-export const getServerSideProps: GetServerSideProps<MetaProps> = async ({
-    params,
-}) => {
-    try {
-        const { data } = await axios.get(
-            `${process.env.NEXT_PUBLIC_API_URL}/api/blog/${params.id}/`
-        );
-        return {
-            props: {
-                meta_id: data.id,
-                meta_username: data.username,
-                meta_title: data.title,
-                meta_cover_image: data.cover_image,
-            },
-        };
-    } catch {
-        return {
-            props: {
-                meta_id: params.id,
-                meta_username: "is404",
-                meta_title: "Post doesn't exist",
-                meta_cover_image: "/post_404.webp",
-            },
-        };
-    }
-};

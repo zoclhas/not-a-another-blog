@@ -103,7 +103,7 @@ export default function UserPage({ user, total_posts }: UserPageProps) {
     const copyUsernameHandler = () => {
         navigator.clipboard.writeText(`https://naab.zocs.space/@${username}`);
         toast({
-            title: "Copied link to clipboard",
+            title: "Copied user link to clipboard",
         });
     };
 

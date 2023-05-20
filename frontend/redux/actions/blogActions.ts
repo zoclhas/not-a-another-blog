@@ -10,6 +10,10 @@ import {
     ADD_BLOG_VIEWS_REQUEST,
     ADD_BLOG_VIEWS_SUCCESS,
     ADD_BLOG_VIEWS_FAIL,
+    //
+    BLOG_RANDOM_REQUEST,
+    BLOG_RANDOM_SUCCESS,
+    BLOG_RANDOM_FAIL,
 } from "@/redux/types/blogTypes";
 import axios from "axios";
 
@@ -98,3 +102,22 @@ export const addBlogViews =
             });
         }
     };
+
+export const getRandomBlog = () => async (dispatch: any) => {
+    try {
+        dispatch({ type: BLOG_DETAIL_REQUEST });
+
+        const { data } = await axios.get(`${url}/api/blog/random/`);
+        dispatch({
+            type: BLOG_DETAIL_SUCCESS,
+            payload: data,
+        });
+    } catch (error: any) {
+        dispatch({
+            type: BLOG_DETAIL_FAIL,
+            payload: error.response.data.detail
+                ? error.response.data.detail
+                : error,
+        });
+    }
+};

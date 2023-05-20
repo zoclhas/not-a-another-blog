@@ -10,6 +10,10 @@ import {
     ADD_BLOG_VIEWS_REQUEST,
     ADD_BLOG_VIEWS_SUCCESS,
     ADD_BLOG_VIEWS_FAIL,
+    //
+    BLOG_RANDOM_REQUEST,
+    BLOG_RANDOM_SUCCESS,
+    BLOG_RANDOM_FAIL,
 } from "@/redux/types/blogTypes";
 
 export const myBlogsReducer = (state = {}, action: any) => {
@@ -88,6 +92,39 @@ export const addBlogViewsReducer = (state = {}, action: any) => {
             };
 
         case ADD_BLOG_VIEWS_FAIL:
+            return {
+                loading: false,
+                error: action.payload,
+            };
+
+        default:
+            return state;
+    }
+};
+
+export const blogRandomReducer = (state = {}, action: any) => {
+    switch (action.type) {
+        case BLOG_DETAIL_REQUEST:
+            return {
+                loading: true,
+            };
+
+        case BLOG_DETAIL_SUCCESS:
+            return {
+                loading: false,
+                id: action.payload.id,
+                images: action.payload.images,
+                view_count: action.payload.view_count,
+                username: action.payload.username,
+                title: action.payload.title,
+                draft: action.payload.draft,
+                published: action.payload.published,
+                cover_image: action.payload.cover_image,
+                content: action.payload.content,
+                tags: action.payload.tags,
+            };
+
+        case BLOG_DETAIL_FAIL:
             return {
                 loading: false,
                 error: action.payload,

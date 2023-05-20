@@ -103,6 +103,6 @@ def add_post_view_count(request, pk):
 
 @api_view(["GET"])
 def get_random_post(request):
-    post = BlogPost.objects.order_by("?")[0]
+    post = BlogPost.objects.filter(draft=False).order_by("?")[0]
     serializer = BlogPostSerializer(post, many=False)
     return Response(serializer.data)
