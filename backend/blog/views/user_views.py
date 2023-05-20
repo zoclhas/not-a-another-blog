@@ -28,6 +28,12 @@ def get_user_detail(request, username):
         else:
             blogs = blogs.order_by("-id")
 
+        query = request.query_params.get("q")
+        if query is not None:
+            blogs = blogs.filter(title__icontains=query) | blogs.filter(
+                content__icontains=query
+            )
+
         paginator = Paginator(blogs, 6)
         page = request.query_params.get("page", 1)
         blogs = paginator.get_page(page)
