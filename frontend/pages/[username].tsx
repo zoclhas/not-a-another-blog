@@ -31,6 +31,7 @@ import { Eye, ChevronLeft, Copy } from "lucide-react";
 
 import { getUserDetail } from "@/redux/actions/userActions";
 import { PaginatedItems } from "@/components/paginate/paginate";
+import axios from "axios";
 
 type UserDetail = {
     loading: boolean;
@@ -58,7 +59,7 @@ interface BlogPostInterface {
     loading: boolean;
 }
 
-export default function UserPage({ user }: UserPageProps) {
+export default function UserPage({ user, total_posts }: UserPageProps) {
     const dispatch = useDispatch();
     const router = useRouter();
     const { toast } = useToast();
@@ -184,11 +185,11 @@ export default function UserPage({ user }: UserPageProps) {
     return (
         <>
             <Head>
-                <title>NAAB | @{username}</title>
-                <meta name="title" content={`NAAB | ${username}`} />
+                <title>NAAB | @{user}</title>
+                <meta name="title" content={`NAAB - @${user}`} />
                 <meta
                     name="description"
-                    content={`Checkout @${username}'s profile! Total posts: ${blog_count}`}
+                    content={`Checkout @${user}'s profile! Total posts: ${total_posts}`}
                 />
             </Head>
 
@@ -341,17 +342,32 @@ export default function UserPage({ user }: UserPageProps) {
 
 type UserPageProps = {
     user: string;
+    total_posts: any;
 };
 
-export const getServerSideProps: GetServerSideProps<UserPageProps> = async ({
-    params,
-}) => {
+export const getServerSideProps: GetServerSideProps<
+    UserPageProps | any
+> = async ({ params }) => {
     if (params && params.username) {
         const username = Array.isArray(params.username)
             ? params.username[0]
             : params.username;
         if (username.at(0) === "@") {
-            return { props: { user: username.substring(1) } };
+            try {
+                const { data }: any = await axios.get(
+                    `${
+                        process.env.NEXT_PUBLIC_API_URL
+                    }/api/u/${username.substring(1)}`
+                );
+                return {
+                    props: {
+                        user: String(data.username),
+                        total_posts: data.blog_count,
+                    },
+                };
+            } catch {
+                return { props: { user: username.substring(1) } };
+            }
         }
     }
     return { notFound: true };

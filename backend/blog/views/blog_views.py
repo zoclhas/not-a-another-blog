@@ -99,3 +99,10 @@ def add_post_view_count(request, pk):
     view_count.save()
 
     return Response({"detail": "Updated view count."}, status=status.HTTP_200_OK)
+
+
+@api_view(["GET"])
+def get_random_post(request):
+    post = BlogPost.objects.order_by("?")[0]
+    serializer = BlogPostSerializer(post, many=False)
+    return Response(serializer.data)

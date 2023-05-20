@@ -16,6 +16,7 @@ def get_user_detail(request, username):
         sort = request.query_params.get("sort", "latest")
         user = User.objects.get(username=username)
         blogs = BlogPost.objects.filter(user=user, draft=False)
+        blog_length = len(blogs)
 
         if sort == "latest":
             blogs = blogs.order_by("-id")
@@ -42,7 +43,7 @@ def get_user_detail(request, username):
         data = {
             "username": user.username,
             "created_at": str(user.date_joined)[:10],
-            "blog_count": len(blogs),
+            "blog_count": blog_length,
             "blogs": serializer.data,
             "page": blogs.number,
             "pages": paginator.num_pages,
