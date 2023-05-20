@@ -80,7 +80,7 @@ export default function PostPage() {
         if (title) {
             dispatch(addBlogViews(Number(blogId)) as any);
         }
-    }, [title, blogId]);
+    }, [title, blogId, dispatch]);
 
     const anchorId = router.asPath.split("#");
     useEffect(() => {

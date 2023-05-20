@@ -75,7 +75,7 @@ export default function UserPage({ user }: UserPageProps) {
 
     useEffect(() => {
         dispatch(getUserDetail(user, 1, "latest") as any);
-    }, [dispatch]);
+    }, [dispatch, user]);
 
     useEffect(() => {
         if (error) {
@@ -91,7 +91,7 @@ export default function UserPage({ user }: UserPageProps) {
     const sortOption = String(router.query["sort"]);
     useEffect(() => {
         dispatch(getUserDetail(user, currentPage || 1, sortOption) as any);
-    }, [dispatch, currentPage, sortOption]);
+    }, [dispatch, currentPage, sortOption, user]);
 
     const copyUsernameHandler = () => {
         navigator.clipboard.writeText(`https://naab.zocs.space/@${username}`);
