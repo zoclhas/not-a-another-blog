@@ -229,65 +229,75 @@ export default function Explore() {
     }
 
     return (
-        <div className="mx-auto mt-4 max-w-6xl px-4">
-            <div className="flex-col gap-2">
-                <Search />
-                <div className="flex gap-2 mt-2 max-[500px]:flex-col">
-                    <SortSelect
-                        sortType="sort"
-                        items={[
-                            { value: "latest", label: "Latest" },
-                            { value: "oldest", label: "Oldest" },
-                            {
-                                value: "views-asd",
-                                label: "Views: Ascending",
-                            },
-                            {
-                                value: "views-dsd",
-                                label: "Views: Descending",
-                            },
-                        ]}
-                        className="max-[500px]:grow max-[500px]:w-full"
-                    />
-                    <SortSelect
-                        sortType="t"
-                        items={[
-                            { value: "all_time", label: "All Time" },
-                            { value: "today", label: "Today" },
-                            { value: "past_week", label: "Week" },
-                            {
-                                value: "past_month",
-                                label: "Month",
-                            },
-                            {
-                                value: "past_year",
-                                label: "Year",
-                            },
-                        ]}
-                        className="max-[500px]:grow max-[500px]:w-full"
-                    />
-                    {tags && (
-                        <TagSelect
-                            frameworks={tags.map((tag) => {
-                                return {
-                                    value: tag.toLowerCase(),
-                                    label: tag,
-                                };
-                            })}
+        <>
+            <Head>
+                <title>NAAB | Explore</title>
+                <meta name="title" content="NAAB - Explore" />
+                <meta
+                    name="description"
+                    content="Explore NAAB's collection of wonderful posts!"
+                />
+            </Head>
+            <div className="mx-auto mt-4 max-w-6xl px-4">
+                <div className="flex-col gap-2">
+                    <Search />
+                    <div className="flex gap-2 mt-2 max-[500px]:flex-col">
+                        <SortSelect
+                            sortType="sort"
+                            items={[
+                                { value: "latest", label: "Latest" },
+                                { value: "oldest", label: "Oldest" },
+                                {
+                                    value: "views-asd",
+                                    label: "Views: Ascending",
+                                },
+                                {
+                                    value: "views-dsd",
+                                    label: "Views: Descending",
+                                },
+                            ]}
                             className="max-[500px]:grow max-[500px]:w-full"
                         />
+                        <SortSelect
+                            sortType="t"
+                            items={[
+                                { value: "all_time", label: "All Time" },
+                                { value: "today", label: "Today" },
+                                { value: "past_week", label: "Week" },
+                                {
+                                    value: "past_month",
+                                    label: "Month",
+                                },
+                                {
+                                    value: "past_year",
+                                    label: "Year",
+                                },
+                            ]}
+                            className="max-[500px]:grow max-[500px]:w-full"
+                        />
+                        {tags && (
+                            <TagSelect
+                                frameworks={tags.map((tag) => {
+                                    return {
+                                        value: tag.toLowerCase(),
+                                        label: tag,
+                                    };
+                                })}
+                                className="max-[500px]:grow max-[500px]:w-full"
+                            />
+                        )}
+                    </div>
+                </div>
+                <div id="posts" className="mt-4">
+                    {blogs && (
+                        <div className="grid grid-cols-3 gap-1.5 max-md:grid-cols-2 max-sm:grid-cols-1">
+                            {blogs.map((blog) => (
+                                <BlogCard key={blog.id} isUser blog={blog} />
+                            ))}
+                        </div>
                     )}
                 </div>
             </div>
-            <div id="posts" className="mt-4">
-                {blogs && (
-                    <div className="grid grid-cols-3 gap-1.5 max-md:grid-cols-2 max-sm:grid-cols-1">
-                        {blogs.map((blog) => (
-                            <BlogCard key={blog.id} isUser blog={blog} />
-                        ))}
-                    </div>
-                )}
-            </div>
-        </div>
+        </>
     );
 }
