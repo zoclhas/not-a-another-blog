@@ -97,7 +97,7 @@ export default function Home() {
                 description: String(error) || String(userError),
             });
         }
-    }, [error, toast]);
+    }, [error, userError, toast]);
 
     if (error) {
         return (

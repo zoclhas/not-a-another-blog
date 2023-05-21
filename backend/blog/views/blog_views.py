@@ -9,7 +9,7 @@ from blog.models import *
 from blog.serializers import *
 
 from rest_framework import status
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 
 
 @api_view(["GET"])
@@ -111,3 +111,67 @@ def get_random_post(request):
     post = BlogPost.objects.filter(draft=False).order_by("?")[0]
     serializer = BlogPostSerializer(post, many=False)
     return Response(serializer.data)
+
+
+@api_view(["GET"])
+def query_posts(request):
+    blogs = BlogPost.objects.filter(draft=False)
+
+    query = request.query_params.get("q")
+    tag = request.query_params.get("tag")
+    sort = request.query_params.get("sort")
+    t = request.query_params.get("t")
+    page = request.query_params.get("page")
+
+    if query:
+        blogs = blogs.filter(title__icontains=query) | blogs.filter(
+            content__icontains=query
+        )
+
+    if tag:
+        blogs = blogs.filter(tags__tag__icontains=tag)
+
+    if sort == "latest":
+        blogs = blogs.order_by("-id")
+    elif sort == "oldest":
+        blogs = blogs.order_by("id")
+    elif sort == "views-asd":
+        blogs = blogs.order_by("views__views")
+    elif sort == "views-dsd":
+        blogs = blogs.order_by("-views__views")
+    else:
+        blogs = blogs.order_by("-id")
+
+    if t == "today":
+        blogs = blogs.filter(published=date.today())
+    elif t == "past_week":
+        week_ago = date.today() - timedelta(days=7)
+        blogs = blogs.filter(published__gte=week_ago)
+    elif t == "past_month":
+        month_ago = date.today() - timedelta(days=30)
+        blogs = blogs.filter(published__gte=month_ago)
+    elif t == "past_year":
+        year_ago = date.today() - timedelta(days=365)
+        blogs = blogs.filter(published__gte=year_ago)
+    else:
+        pass
+
+    page = request.query_params.get("page")
+    paginator = Paginator(blogs, 9)
+
+    try:
+        blogs = paginator.page(page)
+    except PageNotAnInteger:
+        blogs = paginator.page(1)
+    except EmptyPage:
+        blogs = paginator.page(paginator.num_pages)
+
+    if page == None:
+        page = 1
+
+    page = int(page)
+
+    serializer = BlogPostSerializer(blogs, many=True)
+    return Response(
+        {"blogs": serializer.data, "page": page, "pages": paginator.num_pages}
+    )
