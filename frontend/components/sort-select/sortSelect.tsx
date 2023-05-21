@@ -10,6 +10,8 @@ import {
     SelectSeparator,
 } from "@/components/ui/select";
 
+import { cn } from "@/lib/utils";
+
 interface ItemValues {
     value: string;
     label: string;
@@ -19,12 +21,14 @@ interface SelectInterface {
     items: ItemValues[];
     currentPage?: string;
     sortType: string;
+    className?: string;
 }
 
 export const SortSelect = ({
     items,
     currentPage,
     sortType,
+    className,
 }: SelectInterface) => {
     const router = useRouter();
 
@@ -45,12 +49,12 @@ export const SortSelect = ({
         <Select
             onValueChange={(value) => valueChangeHandler(value)}
             value={
-                router.query["sort"]
-                    ? String(router.query["sort"])
+                router.query[sortType]
+                    ? String(router.query[sortType])
                     : items[0].value
             }
         >
-            <SelectTrigger className="w-[200px]">
+            <SelectTrigger className={cn("w-[200px]", className)}>
                 <SelectValue placeholder="Sort" />
             </SelectTrigger>
             <SelectContent>

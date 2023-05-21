@@ -194,6 +194,8 @@ export default function Home() {
         <>
             <Head>
                 <title>Not A Another Blog</title>
+                <meta name="title" content="Not A Another Blog" />
+                <meta name="description" content="Sigh- Welcome to NAAB!" />
             </Head>
             <div className="mx-auto mt-4 max-w-6xl px-4">
                 {userInfo && userDetail && userBlogs && (

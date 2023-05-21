@@ -154,7 +154,7 @@ def query_posts(request):
         year_ago = date.today() - timedelta(days=365)
         blogs = blogs.filter(published__gte=year_ago)
     else:
-        pass
+        blogs = blogs
 
     page = request.query_params.get("page")
     paginator = Paginator(blogs, 9)
@@ -179,5 +179,5 @@ def query_posts(request):
 
 @api_view(["GET"])
 def get_all_tags(request):
-    tags = BlogPostTag.objects.values_list("tag", flat=True).distinct()
+    tags = BlogPostTag.objects.values_list("tag", flat=True).distinct().order_by("tag")
     return Response(tags)
