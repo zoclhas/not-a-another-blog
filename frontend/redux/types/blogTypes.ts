@@ -13,3 +13,7 @@ export const ADD_BLOG_VIEWS_FAIL: string = "ADD_BLOG_VIEWS_FAIL";
 export const BLOG_RANDOM_REQUEST: string = "BLOG_RANDOM_REQUEST";
 export const BLOG_RANDOM_SUCCESS: string = "BLOG_RANDOM_SUCCESS";
 export const BLOG_RANDOM_FAIL: string = "BLOG_RANDOM_FAIL";
+
+export const BLOGS_REQUEST: string = "BLOGS_REQUEST";
+export const BLOGS_SUCCESS: string = "BLOGS_SUCCESS";
+export const BLOGS_FAIL: string = "BLOGS_FAIL";

@@ -14,6 +14,10 @@ import {
     BLOG_RANDOM_REQUEST,
     BLOG_RANDOM_SUCCESS,
     BLOG_RANDOM_FAIL,
+    //
+    BLOGS_REQUEST,
+    BLOGS_SUCCESS,
+    BLOGS_FAIL,
 } from "@/redux/types/blogTypes";
 import axios from "axios";
 
@@ -105,16 +109,35 @@ export const addBlogViews =
 
 export const getRandomBlog = () => async (dispatch: any) => {
     try {
-        dispatch({ type: BLOG_DETAIL_REQUEST });
+        dispatch({ type: BLOG_RANDOM_REQUEST });
 
         const { data } = await axios.get(`${url}/api/blog/random/`);
         dispatch({
-            type: BLOG_DETAIL_SUCCESS,
+            type: BLOG_RANDOM_SUCCESS,
             payload: data,
         });
     } catch (error: any) {
         dispatch({
-            type: BLOG_DETAIL_FAIL,
+            type: BLOG_RANDOM_FAIL,
+            payload: error.response.data.detail
+                ? error.response.data.detail
+                : error,
+        });
+    }
+};
+
+export const getBlogs = () => async (dispatch: any) => {
+    try {
+        dispatch({ type: BLOGS_REQUEST });
+
+        const { data } = await axios.get(`${url}/api/blogs/`);
+        dispatch({
+            type: BLOGS_SUCCESS,
+            payload: data,
+        });
+    } catch (error: any) {
+        dispatch({
+            type: BLOGS_FAIL,
             payload: error.response.data.detail
                 ? error.response.data.detail
                 : error,

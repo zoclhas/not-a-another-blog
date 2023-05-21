@@ -14,6 +14,10 @@ import {
     BLOG_RANDOM_REQUEST,
     BLOG_RANDOM_SUCCESS,
     BLOG_RANDOM_FAIL,
+    //
+    BLOGS_REQUEST,
+    BLOGS_SUCCESS,
+    BLOGS_FAIL,
 } from "@/redux/types/blogTypes";
 
 export const myBlogsReducer = (state = {}, action: any) => {
@@ -104,12 +108,12 @@ export const addBlogViewsReducer = (state = {}, action: any) => {
 
 export const blogRandomReducer = (state = {}, action: any) => {
     switch (action.type) {
-        case BLOG_DETAIL_REQUEST:
+        case BLOG_RANDOM_REQUEST:
             return {
                 loading: true,
             };
 
-        case BLOG_DETAIL_SUCCESS:
+        case BLOG_RANDOM_SUCCESS:
             return {
                 loading: false,
                 id: action.payload.id,
@@ -124,7 +128,32 @@ export const blogRandomReducer = (state = {}, action: any) => {
                 tags: action.payload.tags,
             };
 
-        case BLOG_DETAIL_FAIL:
+        case BLOG_RANDOM_FAIL:
+            return {
+                loading: false,
+                error: action.payload,
+            };
+
+        default:
+            return state;
+    }
+};
+
+export const blogsReducer = (state = {}, action: any) => {
+    switch (action.type) {
+        case BLOGS_REQUEST:
+            return {
+                loading: true,
+            };
+
+        case BLOGS_SUCCESS:
+            return {
+                loading: false,
+                latest_posts: action.payload.latest_posts,
+                trending_posts: action.payload.trending_posts,
+            };
+
+        case BLOGS_FAIL:
             return {
                 loading: false,
                 error: action.payload,
