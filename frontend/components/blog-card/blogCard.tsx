@@ -24,12 +24,15 @@ interface BlogPostInterface {
     cover_image: string;
     content: string;
     tags: string[];
-    error: string | any;
-    loading: boolean;
+    error?: string | any;
+    loading?: boolean;
 }
 
-export const BlogCard = (props: { blog: BlogPostInterface }) => {
-    const { blog } = props;
+export const BlogCard = (props: {
+    blog: BlogPostInterface;
+    isUser?: boolean;
+}) => {
+    const { blog, isUser } = props;
 
     return (
         <Card
@@ -61,7 +64,7 @@ export const BlogCard = (props: { blog: BlogPostInterface }) => {
                     </div>
                 )}
 
-                <div className="flex absolute bottom-4 right-4 z-10">
+                <div className="flex absolute bottom-4 right-4 z-10 text-white">
                     <Eye className="scale-[0.8]" />
                     &nbsp;{blog.view_count}
                 </div>
@@ -69,7 +72,19 @@ export const BlogCard = (props: { blog: BlogPostInterface }) => {
 
             <CardHeader>
                 <CardTitle>{blog.title}</CardTitle>
-                <CardDescription>{blog.published}</CardDescription>
+                {!isUser ? (
+                    <CardDescription>{blog.published}</CardDescription>
+                ) : (
+                    <CardDescription className="flex justify-between gap-2">
+                        <Link
+                            href={`/@${blog.username}`}
+                            className="opacity-80 hover:opacity-100 transition-opacity"
+                        >
+                            @{blog.username}
+                        </Link>
+                        <span>{blog.published}</span>
+                    </CardDescription>
+                )}
             </CardHeader>
 
             <CardFooter>

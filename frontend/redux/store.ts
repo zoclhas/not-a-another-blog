@@ -13,6 +13,7 @@ import {
     myBlogsReducer,
     blogDetailsReducer,
     blogRandomReducer,
+    blogsReducer,
 } from "./reducers/blogReducers";
 import { useMemo } from "react";
 
@@ -25,6 +26,7 @@ const reducers = combineReducers({
     myBlogs: myBlogsReducer,
     blogDetails: blogDetailsReducer,
     blogRandom: blogRandomReducer,
+    blogs: blogsReducer,
 });
 
 // create a makeStore function

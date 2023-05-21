@@ -4,6 +4,7 @@ import Link from "next/link";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import type { GetServerSideProps } from "next";
+import axios from "axios";
 
 import {
     Card,
@@ -31,7 +32,6 @@ import { ChevronLeft, Copy } from "lucide-react";
 
 import { getUserDetail } from "@/redux/actions/userActions";
 import { PaginatedItems } from "@/components/paginate/paginate";
-import axios from "axios";
 
 type UserDetail = {
     loading: boolean;
@@ -245,6 +245,7 @@ export default function UserPage({ user, total_posts }: UserPageProps) {
                 <div className="my-4 flex gap-4 max-md:flex-col max-md:gap-2">
                     <Search currentPage={`@${username}`} neglect="username" />
                     <SortSelect
+                        sortType="sort"
                         items={[
                             { value: "latest", label: "Latest" },
                             { value: "oldest", label: "Oldest" },

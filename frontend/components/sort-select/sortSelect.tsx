@@ -18,20 +18,25 @@ interface ItemValues {
 interface SelectInterface {
     items: ItemValues[];
     currentPage?: string;
+    sortType: string;
 }
 
-export const SortSelect = ({ items, currentPage }: SelectInterface) => {
+export const SortSelect = ({
+    items,
+    currentPage,
+    sortType,
+}: SelectInterface) => {
     const router = useRouter();
 
     const queryParams = { ...router.query };
     if (queryParams.username) delete queryParams.username;
 
     const valueChangeHandler = (value: string) => {
+        queryParams[sortType] = value;
         router.push({
             pathname: currentPage || router.pathname,
             query: {
                 ...queryParams,
-                sort: value,
             },
         });
     };
