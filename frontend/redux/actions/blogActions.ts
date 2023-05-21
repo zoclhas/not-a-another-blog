@@ -18,6 +18,10 @@ import {
     BLOGS_REQUEST,
     BLOGS_SUCCESS,
     BLOGS_FAIL,
+    //
+    EXPLORE_BLOGS_REQUEST,
+    EXPLORE_BLOGS_SUCCESS,
+    EXPLORE_BLOGS_FAIL,
 } from "@/redux/types/blogTypes";
 import axios from "axios";
 
@@ -144,3 +148,26 @@ export const getBlogs = () => async (dispatch: any) => {
         });
     }
 };
+
+export const queryBlogs =
+    (query: string, tag: string, sort: string, t: string, page: number) =>
+    async (dispatch: any) => {
+        try {
+            dispatch({ type: BLOGS_REQUEST });
+
+            const { data } = await axios.get(
+                `${url}/api/explore/?q=${query}&tag=${tag}&sort=${sort}&t=${t}&page=${page}`
+            );
+            dispatch({
+                type: BLOGS_SUCCESS,
+                payload: data,
+            });
+        } catch (error: any) {
+            dispatch({
+                type: BLOGS_FAIL,
+                payload: error.response.data.detail
+                    ? error.response.data.detail
+                    : error,
+            });
+        }
+    };

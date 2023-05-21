@@ -18,6 +18,10 @@ import {
     BLOGS_REQUEST,
     BLOGS_SUCCESS,
     BLOGS_FAIL,
+    //
+    EXPLORE_BLOGS_REQUEST,
+    EXPLORE_BLOGS_SUCCESS,
+    EXPLORE_BLOGS_FAIL,
 } from "@/redux/types/blogTypes";
 
 export const myBlogsReducer = (state = {}, action: any) => {
@@ -152,6 +156,32 @@ export const blogsReducer = (state = {}, action: any) => {
                 loading: false,
                 latest_posts: action.payload.latest_posts,
                 trending_posts: action.payload.trending_posts,
+            };
+
+        case BLOGS_FAIL:
+            return {
+                loading: false,
+                error: action.payload,
+            };
+
+        default:
+            return state;
+    }
+};
+
+export const exploreBlogsReducer = (state = {}, action: any) => {
+    switch (action.type) {
+        case BLOGS_REQUEST:
+            return {
+                loading: true,
+            };
+
+        case BLOGS_SUCCESS:
+            return {
+                loading: false,
+                blogs: action.payload.blogs,
+                page: action.payload.page,
+                pages: action.payload.pages,
             };
 
         case BLOGS_FAIL:

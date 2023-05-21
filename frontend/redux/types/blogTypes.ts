@@ -17,3 +17,7 @@ export const BLOG_RANDOM_FAIL: string = "BLOG_RANDOM_FAIL";
 export const BLOGS_REQUEST: string = "BLOGS_REQUEST";
 export const BLOGS_SUCCESS: string = "BLOGS_SUCCESS";
 export const BLOGS_FAIL: string = "BLOGS_FAIL";
+
+export const EXPLORE_BLOGS_REQUEST: string = "EXPLORE_BLOGS_REQUEST";
+export const EXPLORE_BLOGS_SUCCESS: string = "EXPLORE_BLOGS_SUCCESS";
+export const EXPLORE_BLOGS_FAIL: string = "EXPLORE_BLOGS_FAIL";
