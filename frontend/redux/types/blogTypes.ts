@@ -21,3 +21,7 @@ export const BLOGS_FAIL: string = "BLOGS_FAIL";
 export const EXPLORE_BLOGS_REQUEST: string = "EXPLORE_BLOGS_REQUEST";
 export const EXPLORE_BLOGS_SUCCESS: string = "EXPLORE_BLOGS_SUCCESS";
 export const EXPLORE_BLOGS_FAIL: string = "EXPLORE_BLOGS_FAIL";
+
+export const TAGS_REQUEST: string = "TAGS_REQUEST";
+export const TAGS_SUCCESS: string = "TAGS_SUCCESS";
+export const TAGS_FAIL: string = "TAGS_FAIL";

@@ -175,3 +175,9 @@ def query_posts(request):
     return Response(
         {"blogs": serializer.data, "page": page, "pages": paginator.num_pages}
     )
+
+
+@api_view(["GET"])
+def get_all_tags(request):
+    tags = BlogPostTag.objects.values_list("tag", flat=True).distinct()
+    return Response(tags)

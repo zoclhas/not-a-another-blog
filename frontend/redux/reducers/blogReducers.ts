@@ -22,6 +22,10 @@ import {
     EXPLORE_BLOGS_REQUEST,
     EXPLORE_BLOGS_SUCCESS,
     EXPLORE_BLOGS_FAIL,
+    //
+    TAGS_REQUEST,
+    TAGS_SUCCESS,
+    TAGS_FAIL,
 } from "@/redux/types/blogTypes";
 
 export const myBlogsReducer = (state = {}, action: any) => {
@@ -171,12 +175,12 @@ export const blogsReducer = (state = {}, action: any) => {
 
 export const exploreBlogsReducer = (state = {}, action: any) => {
     switch (action.type) {
-        case BLOGS_REQUEST:
+        case EXPLORE_BLOGS_REQUEST:
             return {
                 loading: true,
             };
 
-        case BLOGS_SUCCESS:
+        case EXPLORE_BLOGS_SUCCESS:
             return {
                 loading: false,
                 blogs: action.payload.blogs,
@@ -184,7 +188,31 @@ export const exploreBlogsReducer = (state = {}, action: any) => {
                 pages: action.payload.pages,
             };
 
-        case BLOGS_FAIL:
+        case EXPLORE_BLOGS_FAIL:
+            return {
+                loading: false,
+                error: action.payload,
+            };
+
+        default:
+            return state;
+    }
+};
+
+export const getTagsReducer = (state = {}, action: any) => {
+    switch (action.type) {
+        case TAGS_REQUEST:
+            return {
+                loading: true,
+            };
+
+        case TAGS_SUCCESS:
+            return {
+                loading: false,
+                tags: action.payload,
+            };
+
+        case TAGS_FAIL:
             return {
                 loading: false,
                 error: action.payload,

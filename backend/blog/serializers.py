@@ -18,6 +18,12 @@ class BlogImageLinkSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class BlogTagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BlogPostTag
+        fields = "__all__"
+
+
 class BlogPostViewsSerializer(serializers.ModelSerializer):
     class Meta:
         model = BlogPostViews

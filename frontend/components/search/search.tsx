@@ -8,9 +8,10 @@ import { Search as SearchIcon } from "lucide-react";
 interface SearchProps {
     currentPage?: string;
     neglect?: string;
+    searchType?: string;
 }
 
-export const Search = ({ currentPage, neglect }: SearchProps) => {
+export const Search = ({ currentPage, neglect, searchType }: SearchProps) => {
     const router = useRouter();
     const [query, setQuery] = useState<string>("");
 
@@ -20,13 +21,17 @@ export const Search = ({ currentPage, neglect }: SearchProps) => {
 
     const queryParams = { ...router.query };
     if (neglect) delete queryParams[neglect];
+    if (searchType) {
+        queryParams[searchType] = query;
+    } else {
+        queryParams.q = query;
+    }
 
     const queryHandler = () => {
         router.push({
             pathname: currentPage || router.pathname,
             query: {
                 ...queryParams,
-                q: query,
             },
         });
     };

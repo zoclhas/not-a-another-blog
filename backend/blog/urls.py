@@ -13,6 +13,7 @@ urlpatterns = [
         "update-blog-views/<int:pk>/", bv.add_post_view_count, name="update-blog-views"
     ),
     path("explore/", bv.query_posts, name="explore-posts"),
+    path("tags/", bv.get_all_tags, name="get-all-tags"),
     # User
     path("u/<str:username>/", uv.get_user_detail, name="get-user-detail"),
 ]
