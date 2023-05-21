@@ -2,6 +2,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.db.models import Sum
 
 from django.contrib.auth.models import User
 from blog.models import *
@@ -55,6 +56,9 @@ def get_my_posts(request):
 
     page = int(page)
 
+    views_sum = BlogPostViews.objects.filter(
+        post__in=BlogPost.objects.filter(user=request.user)
+    ).aggregate(Sum("views"))["views__sum"]
     serializer = BlogPostSerializer(posts, many=True)
     draft_serializer = BlogPostSerializer(drafts, many=True)
     return Response(
@@ -63,6 +67,7 @@ def get_my_posts(request):
             "drafts": draft_serializer.data,
             "total_blogs": len(posts),
             "total_drafts": len(drafts),
+            "total_views": views_sum if views_sum is not None else 0,
             "page": page,
             "pages": paginator.num_pages,
         }

@@ -152,11 +152,11 @@ export default function Login() {
                             <Link href="/register">Register</Link>
                         </Button>
 
-                        <Button variant="outline" className="w-full" asChild>
-                            <Link href="/forgot-password">
-                                Forgot Password?
-                            </Link>
+                        {/* <Link href="/forgot-password"> */}
+                        <Button variant="outline" className="w-full" disabled>
+                            Forgot Password?
                         </Button>
+                        {/* </Link> */}
                     </div>
                 </div>
             </div>

@@ -39,6 +39,7 @@ type UserDetail = {
     created_at: string;
     blog_count: number;
     blogs: BlogPostInterface[];
+    total_views: number;
     page: number;
     pages: number;
     error: string;
@@ -71,6 +72,7 @@ export default function UserPage({ user, total_posts }: UserPageProps) {
         username,
         created_at,
         blog_count,
+        total_views,
         blogs,
         page,
         pages,
@@ -193,7 +195,7 @@ export default function UserPage({ user, total_posts }: UserPageProps) {
                 />
             </Head>
 
-            <div className="mx-auto mt-4 max-w-4xl px-4">
+            <div className="mx-auto mt-4 max-w-4xl px-4 md:mb-4">
                 <div className="flex gap-4 items-center">
                     <div className="flex aspect-square w-[100px] items-center justify-center rounded-md bg-slate-400 dark:bg-slate-700">
                         <span className="text-6xl">
@@ -224,10 +226,15 @@ export default function UserPage({ user, total_posts }: UserPageProps) {
                     </div>
                 </div>
 
-                <div className="mt-4">
+                <div className="mt-4 flex gap-2 flex-wrap">
                     <Badge variant="outline" className="rounded-md">
                         <h3 className="font-bold text-lg">
                             Total Posts: {blog_count}
+                        </h3>
+                    </Badge>
+                    <Badge variant="outline" className="rounded-md">
+                        <h3 className="font-bold text-lg">
+                            Total Views: {total_views}
                         </h3>
                     </Badge>
                 </div>

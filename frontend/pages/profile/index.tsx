@@ -27,6 +27,7 @@ interface MyBlogDetails {
     total_blogs: number;
     drafts: BlogInterface[];
     total_drafts: number;
+    total_views: number;
     page: number;
     pages: number;
 }
@@ -64,6 +65,7 @@ export default function Profile() {
         total_blogs,
         drafts,
         total_drafts,
+        total_views,
         page,
         pages,
     }: MyBlogDetails = myBlogs;
@@ -93,7 +95,7 @@ export default function Profile() {
                 <Head>
                     <title>NAAB | Profile</title>
                 </Head>
-                <div className="m-auto my-4 grid max-w-6xl grid-cols-[1.5fr,0.5fr] gap-4 px-4 max-md:flex max-md:flex-col-reverse">
+                <div className="m-auto my-4 grid max-w-6xl grid-cols-[1.5fr,0.5fr] gap-4 px-4 max-md:flex max-md:flex-col-reverse md:mb-4">
                     <div>
                         {loading ? (
                             <>
@@ -291,20 +293,28 @@ export default function Profile() {
                                         </Button>
                                     </CardFooter>
                                 ) : (
-                                    <CardFooter className="flex gap-1.5">
+                                    <CardFooter className="flex gap-1.5 flex-wrap">
                                         <Button
                                             disabled
                                             variant="outline"
-                                            className="w-full"
+                                            className="w-full grow"
                                         >
                                             Blogs: {total_blogs}
                                         </Button>
                                         <Button
                                             disabled
                                             variant="outline"
-                                            className="w-full"
+                                            className="w-full grow"
                                         >
                                             Drafts: {total_drafts}
+                                        </Button>
+
+                                        <Button
+                                            disabled
+                                            variant="outline"
+                                            className="w-full grow"
+                                        >
+                                            Total Views: {total_views}
                                         </Button>
                                     </CardFooter>
                                 )}

@@ -79,6 +79,7 @@ export const userDetailReducer = (state = {}, action: any) => {
                 created_at: action.payload.created_at,
                 blog_count: action.payload.blog_count,
                 blogs: action.payload.blogs,
+                total_views: action.payload.total_views,
                 page: action.payload.page,
                 pages: action.payload.pages,
             };

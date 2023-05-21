@@ -2,6 +2,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.db.models import Sum
 
 from django.contrib.auth.models import User
 from blog.models import *
@@ -39,12 +40,16 @@ def get_user_detail(request, username):
         page = request.query_params.get("page", 1)
         blogs = paginator.get_page(page)
 
+        views_sum = BlogPostViews.objects.filter(
+            post__in=BlogPost.objects.filter(user=user)
+        ).aggregate(Sum("views"))["views__sum"]
         serializer = BlogPostSerializer(blogs, many=True)
         data = {
             "username": user.username,
             "created_at": str(user.date_joined)[:10],
             "blog_count": blog_length,
             "blogs": serializer.data,
+            "total_views": views_sum if views_sum is not None else 0,
             "page": blogs.number,
             "pages": paginator.num_pages,
         }

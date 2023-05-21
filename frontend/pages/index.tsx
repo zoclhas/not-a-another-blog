@@ -55,6 +55,7 @@ type UserDetail = {
     username: string;
     blog_count: number;
     blogs: BlogPostInterface[];
+    total_views: number;
     error: string;
 };
 
@@ -73,6 +74,7 @@ export default function Home() {
         username,
         blog_count,
         blogs: userBlogs,
+        total_views,
     }: UserDetail = userDetail;
 
     useEffect(() => {
@@ -215,10 +217,27 @@ export default function Home() {
                                 </CardTitle>
                             </CardHeader>
 
-                            <CardFooter className="justify-center">
-                                <Badge variant="outline" className="rounded-md">
-                                    <h3 className="font-bold text-lg">
-                                        Total Posts: {blog_count}
+                            <CardFooter className="justify-center flex-col gap-2">
+                                <Badge
+                                    variant="outline"
+                                    className="rounded-md grow w-full"
+                                >
+                                    <h3 className="text-lg flex justify-between gap-2 w-full">
+                                        Total Posts:{" "}
+                                        <span className="font-bold tabular-nums">
+                                            {blog_count}
+                                        </span>
+                                    </h3>
+                                </Badge>
+                                <Badge
+                                    variant="outline"
+                                    className="rounded-md grow w-full"
+                                >
+                                    <h3 className="text-lg flex justify-between gap-2 w-full">
+                                        Total Views:{" "}
+                                        <span className="font-bold tabular-nums">
+                                            {total_views}
+                                        </span>
                                     </h3>
                                 </Badge>
                             </CardFooter>

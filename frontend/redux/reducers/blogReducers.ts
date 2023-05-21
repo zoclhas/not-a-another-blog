@@ -34,6 +34,7 @@ export const myBlogsReducer = (state = {}, action: any) => {
                 total_blogs: action.payload.total_blogs,
                 drafts: action.payload.drafts,
                 total_drafts: action.payload.total_drafts,
+                total_views: action.payload.total_views,
                 page: action.payload.page,
                 pages: action.payload.pages,
             };
