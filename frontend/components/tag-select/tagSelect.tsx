@@ -36,10 +36,12 @@ export const TagSelect = ({
     const [open, setOpen] = React.useState(false);
     const [value, setValue] = React.useState("");
 
+    const queryParams = { ...router.query };
     const tagChangeHandler = (currValue: string) => {
+        queryParams[""] = currValue;
         router.push({
             query: {
-                tag: currValue,
+                ...queryParams,
             },
         });
     };
