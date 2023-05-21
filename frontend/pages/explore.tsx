@@ -297,6 +297,8 @@ export default function Explore() {
                         </div>
                     )}
                 </div>
+
+                <PaginatedItems page={page} totalCount={pages} />
             </div>
         </>
     );
