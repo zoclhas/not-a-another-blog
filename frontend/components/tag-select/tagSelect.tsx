@@ -38,7 +38,7 @@ export const TagSelect = ({
 
     const queryParams = { ...router.query };
     const tagChangeHandler = (currValue: string) => {
-        queryParams[""] = currValue;
+        queryParams["tag"] = currValue;
         router.push({
             query: {
                 ...queryParams,
