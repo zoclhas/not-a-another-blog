@@ -37,6 +37,7 @@ class BlogPost(models.Model):
         upload_to=image_folder,
         null=False,
         blank=False,
+        default="placeholder.png",
     )
     content = models.TextField(blank=False, null=False)
 
