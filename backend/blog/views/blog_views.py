@@ -2,12 +2,15 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.db.models import Sum
 
+from django.contrib.auth.models import User
 from blog.models import *
 from blog.serializers import *
 
 from rest_framework import status
 from datetime import datetime, timedelta, date
+
 
 @api_view(["GET"])
 def get_blog_posts(request):
@@ -26,6 +29,7 @@ def get_blog_posts(request):
             "trending_posts": trending_serializer.data,
         }
     )
+
 
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
@@ -52,6 +56,9 @@ def get_my_posts(request):
 
     page = int(page)
 
+    views_sum = BlogPostViews.objects.filter(
+        post__in=BlogPost.objects.filter(user=request.user)
+    ).aggregate(Sum("views"))["views__sum"]
     serializer = BlogPostSerializer(posts, many=True)
     draft_serializer = BlogPostSerializer(drafts, many=True)
     return Response(
@@ -60,6 +67,7 @@ def get_my_posts(request):
             "drafts": draft_serializer.data,
             "total_blogs": len(posts),
             "total_drafts": len(drafts),
+            "total_views": views_sum if views_sum is not None else 0,
             "page": page,
             "pages": paginator.num_pages,
         }
@@ -68,22 +76,20 @@ def get_my_posts(request):
 
 @api_view(["GET"])
 def get_post(request, pk):
-    if (
-        request.user is not None
-        and not request.user.is_anonymous
-        # and BlogPost.objects.filter(user=request.user)
-    ):
-        post = BlogPost.objects.filter(id=pk)
-        serializer = BlogPostSerializer(post, many=False)
-        return Response(serializer.data)
+    post = BlogPost.objects.get(id=pk)
 
-    try:
-        post = BlogPost.objects.get(id=pk).filter(draft=False)
-        serializer = BlogPostSerializer(post, many=False)
-        return Response(serializer.data)
-    except:
-        content = {"detail": "Blog doesn't exist or is draft."}
-        return Response(content, status=status.HTTP_404_NOT_FOUND)
+    if post.draft:
+        if not request.user.is_anonymous and BlogPost.objects.filter(user=request.user):
+            post = BlogPost.objects.get(id=pk)
+            serializer = BlogPostSerializer(post, many=False)
+            return Response(serializer.data)
+        else:
+            content = {"detail": "Blog doesn't exist or is draft."}
+            return Response(content, status=status.HTTP_404_NOT_FOUND)
+
+    serializer = BlogPostSerializer(post, many=False)
+    return Response(serializer.data)
+
 
 @api_view(["POST"])
 def add_post_view_count(request, pk):
@@ -176,9 +182,10 @@ def get_all_tags(request):
     tags = BlogPostTag.objects.values_list("tag", flat=True).distinct().order_by("tag")
     return Response(tags)
 
+
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
-def create_post(requset):
+def create_post(request):
     user = request.user
     post = BlogPost.objects.create(
         user=user, title="A title...", draft=True, content="Write out the stuff..."
@@ -196,6 +203,6 @@ def delete_post(request, pk):
     post.delete()
     return Response({"detail": "Post has been successfully deleted."})
 
-#@api_view(["PUT"]):
-#@permission_classes([IsAuthenticated])
 
+# @api_view(["PUT"]):
+# @permission_classes([IsAuthenticated])
