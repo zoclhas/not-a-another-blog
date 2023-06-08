@@ -95,6 +95,6 @@ def delete_post(request, pk):
     post.delete()
     return Response({"detail": "Post has been successfully deleted."})
 
-@api_view(["PUT"]):
-@permission_classes([IsAuthenticated])
+#@api_view(["PUT"]):
+#@permission_classes([IsAuthenticated])
 
