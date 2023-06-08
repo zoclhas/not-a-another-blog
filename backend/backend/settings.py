@@ -171,4 +171,5 @@ ACCOUNT_EMAIL_VERIFICATION = "none"
 CSRF_TRUSTED_ORIGINS = [
     "https://api.naab.zocs.space",
     "https://zoclhas-verbose-chainsaw-wxj5v74xp4jcg446-8000.preview.app.github.dev",
+    "https://api.notaanother.blog",
 ]
