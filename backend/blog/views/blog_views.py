@@ -74,6 +74,96 @@ def get_post(request, pk):
         content = {"detail": "Blog doesn't exist or is draft."}
         return Response(content, status=status.HTTP_404_NOT_FOUND)
 
+@api_view(["POST"])
+def add_post_view_count(request, pk):
+    post = BlogPost.objects.get(id=pk)
+
+    if post.draft:
+        content = {"detail": "Blog doesn't exist or is draft."}
+        return Response(content, status=status.HTTP_400_BAD_REQUEST)
+
+    view_count = BlogPostViews.objects.get(post=post)
+    view_count.views += 1
+    view_count.save()
+
+    return Response({"detail": "Updated view count."}, status=status.HTTP_200_OK)
+
+
+@api_view(["GET"])
+def get_random_post(request):
+    post = BlogPost.objects.filter(draft=False).order_by("?")[0]
+    serializer = BlogPostSerializer(post, many=False)
+    return Response(serializer.data)
+
+
+@api_view(["GET"])
+def query_posts(request):
+    blogs = BlogPost.objects.filter(draft=False)
+
+    query = request.query_params.get("q")
+    tag = request.query_params.get("tag")
+    sort = request.query_params.get("sort")
+    t = request.query_params.get("t")
+    page = request.query_params.get("page")
+
+    if query:
+        blogs = blogs.filter(title__icontains=query) | blogs.filter(
+            content__icontains=query
+        )
+
+    if tag:
+        blogs = blogs.filter(tags__tag__icontains=tag)
+
+    if sort == "latest":
+        blogs = blogs.order_by("-id")
+    elif sort == "oldest":
+        blogs = blogs.order_by("id")
+    elif sort == "views-asd":
+        blogs = blogs.order_by("views__views")
+    elif sort == "views-dsd":
+        blogs = blogs.order_by("-views__views")
+    else:
+        blogs = blogs.order_by("-id")
+
+    if t == "today":
+        blogs = blogs.filter(published=date.today())
+    elif t == "past_week":
+        week_ago = date.today() - timedelta(days=7)
+        blogs = blogs.filter(published__gte=week_ago)
+    elif t == "past_month":
+        month_ago = date.today() - timedelta(days=30)
+        blogs = blogs.filter(published__gte=month_ago)
+    elif t == "past_year":
+        year_ago = date.today() - timedelta(days=365)
+        blogs = blogs.filter(published__gte=year_ago)
+    else:
+        blogs = blogs
+
+    page = request.query_params.get("page")
+    paginator = Paginator(blogs, 9)
+
+    try:
+        blogs = paginator.page(page)
+    except PageNotAnInteger:
+        blogs = paginator.page(1)
+    except EmptyPage:
+        blogs = paginator.page(paginator.num_pages)
+
+    if page == None:
+        page = 1
+
+    page = int(page)
+
+    serializer = BlogPostSerializer(blogs, many=True)
+    return Response(
+        {"blogs": serializer.data, "page": page, "pages": paginator.num_pages}
+    )
+
+
+@api_view(["GET"])
+def get_all_tags(request):
+    tags = BlogPostTag.objects.values_list("tag", flat=True).distinct().order_by("tag")
+    return Response(tags)
 
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
