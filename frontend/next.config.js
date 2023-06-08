@@ -14,6 +14,9 @@ const nextConfig = {
             {
                 hostname: "api.naab.zocs.space",
             },
+            {
+          hostname: "api.notaanother.blog",
+      },
         ],
     },
 };
